@@ -1,3 +1,5 @@
+using System;
+
 public interface IGameContextUpdatesProvider {
     IObservable<int> GetHpUpdates();
     IObservable<int> GetMpUpdates();
