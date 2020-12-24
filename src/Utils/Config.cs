@@ -19,17 +19,13 @@ class Server {
     public int Version { get; private set; }
 }
 
-class Skill {
-    public int Id { get; private set; }
-}
-
 class Macros {
     public string Name { get; private set; }
     public string Hotkey { get; private set; }
     public Skill[] Skills { get; private set; }
 }
 
-class Account {
+public class Account {
     public string Login { get; private set; }
     public int Password { get; private set; }
     public int DefaultRoleIndex { get; private set; }
