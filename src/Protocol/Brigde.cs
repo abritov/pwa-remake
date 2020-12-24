@@ -1,18 +1,28 @@
 using System;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Websocket.Client;
 
 class PwToHttpBridge : IProtocol {
     Api api;
+    WebsocketClient client;
 
-    public PwToHttpBridge(Api api) {
+    public PwToHttpBridge(Api api, Uri wsEndpoint) {
         this.api = api;
+        this.client = new WebsocketClient(wsEndpoint);
+        client.ReconnectTimeout = TimeSpan.FromSeconds(30);
+        client.ReconnectionHappened.Subscribe(info =>
+            Console.WriteLine($"Reconnection happened, type: {info.Type}"));
     }
-    public IObservable<string> EnterWorld() {
-        // return Observable.create
+    public async Task<IObservable<Events>> EnterWorld(string serverAddr, int? selectRoleIndex, Account account) {
+        var cmd = api.EnterWorld(serverAddr, selectRoleIndex, account);
+        await client.StartOrFail();
+        await client.SendInstant(cmd);
+
+        return client.MessageReceived.Select(msg => api.ParseEvent(msg.Text));
     }
 
-    public IObservable<Role[]> GetRoles() {
-
-    }
     public void SendSkills() {
 
     }
