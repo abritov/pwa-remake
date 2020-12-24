@@ -2,33 +2,30 @@ using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using Websocket.Client;
 
-abstract class Events {}
+class EnterWorld {
 
-class Api: IDisposable {
-    ClientWebSocket connection;
-    string wsEndpoint;
-    Account account;
-    CancellationTokenSource cancelation = new CancellationTokenSource();
+    public EnterWorld(string serverAddr, int? selectRoleIndex, Account account) {
 
-    public Api(string wsEndpoint, Account account) {
-        connection = new ClientWebSocket();
-        this.wsEndpoint = wsEndpoint;
-        this.account = account;
     }
+}
+
+public abstract class Events {}
+sealed class Unknown: Events { }
+
+class Api {
 
     // Task Connect() {
     //     connection.ReceiveAsync()
     //     return connection.ConnectAsync(new Uri(wsEndpoint), cancelation.Token);
     // }
 
-    public IObservable<Events> EnterWorld() {
-
+    public string EnterWorld(string serverAddr, int? selectRoleIndex, Account account) {
+        return $"{{[{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": \"{selectRoleIndex}\", \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}]}}";
     }
 
-    public void Dispose()
-    {
-        cancelation.Cancel();
-        connection.Dispose();
+    public Events ParseEvent(string msg) {
+        return new Unknown();
     }
 }
