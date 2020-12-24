@@ -9,16 +9,16 @@ class GameContextMemoryProvider: IGameContextUpdatesProvider {
         this.offsets = offsets;
     }
 
-    IObservable<int> GetHpUpdates() {
+    public IObservable<int> GetHpUpdates() {
         return ticker.Scan(0, (acc, value) => acc + 1);
     }
-    IObservable<int> GetMpUpdates() {
+    public IObservable<int> GetMpUpdates() {
         throw new System.Exception("not implemented");
     }
-    IObservable<Role> GetAttackUpdates() {
+    public IObservable<Role> GetAttackUpdates() {
         throw new System.Exception("not implemented");
     }
-    IObservable<Point3D> GetCoordinateUpdates() {
+    public IObservable<Point3D> GetCoordinateUpdates() {
         throw new System.Exception("not implemented");
     }
 }
