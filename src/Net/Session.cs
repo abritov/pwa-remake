@@ -4,11 +4,18 @@ using Akka.Event;
 class Session : ReceiveActor {
     private readonly ILoggingAdapter log = Context.GetLogger();
 
-    public Session()
+    private IProtocol protocol;
+    public Session(IProtocol protocol, IActorRef manager)
     {
+        this.protocol = protocol;
+
         Receive<string>(message => {
             log.Info("Received String message: {0}", message);
-            Sender.Tell(message);
+            Start();
         });
+    }
+
+    private async void Start() {
+        await protocol.EnterWorld("51.255.67.56:28082", new Account() { Login = "skidrow1", Password = "123456", DefaultRoleIndex = 1 });
     }
 }

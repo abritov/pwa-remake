@@ -21,8 +21,8 @@ class Api {
     //     return connection.ConnectAsync(new Uri(wsEndpoint), cancelation.Token);
     // }
 
-    public string EnterWorld(string serverAddr, int? selectRoleIndex, Account account) {
-        return $"{{[{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": \"{selectRoleIndex}\", \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}]}}";
+    public string EnterWorld(string serverAddr, Account account) {
+        return $"{{[{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": {account.DefaultRoleIndex}, \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}]}}";
     }
 
     public Events ParseEvent(string msg) {
