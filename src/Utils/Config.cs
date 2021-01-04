@@ -26,9 +26,9 @@ class Macros {
 }
 
 public class Account {
-    public string Login { get; private set; }
-    public int Password { get; private set; }
-    public int DefaultRoleIndex { get; private set; }
+    public string Login { get; set; }
+    public string Password { get; set; }
+    public int DefaultRoleIndex { get; set; }
 }
 
 class Config {
