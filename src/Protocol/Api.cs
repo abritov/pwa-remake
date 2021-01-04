@@ -22,7 +22,7 @@ class Api {
     // }
 
     public string EnterWorld(string serverAddr, Account account) {
-        return $"{{[{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": {account.DefaultRoleIndex}, \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}]}}";
+        return $"{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": {account.DefaultRoleIndex}, \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}";
     }
 
     public Events ParseEvent(string msg) {
