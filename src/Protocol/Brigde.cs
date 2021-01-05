@@ -10,10 +10,16 @@ class PwToHttpBridge : IProtocol {
 
     public PwToHttpBridge(Api api, Uri wsEndpoint) {
         this.api = api;
-        this.client = new WebsocketClient(wsEndpoint);
+        this.client = new WebsocketClient(wsEndpoint) {
+            IsTextMessageConversionEnabled = true,
+            MessageEncoding = System.Text.Encoding.UTF8
+        };
         client.ReconnectTimeout = TimeSpan.FromSeconds(30);
-        client.ReconnectionHappened.Subscribe(info =>
+        client.ReconnectionHappened.Skip(1).Subscribe(info =>
             Console.WriteLine($"Reconnection happened, type: {info.Type}"));
+        // client.MessageReceived.Do(msg => {
+        //     Console.WriteLine(msg.MessageType);
+        // }).Subscribe();
     }
     public async Task<IObservable<PwRpc>> EnterWorld(string serverAddr, Account account) {
         var cmd = api.EnterWorld(serverAddr, account);
