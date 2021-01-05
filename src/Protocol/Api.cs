@@ -234,7 +234,17 @@ public class ApiResponse
 
         public override object IntoRpc()
         {
-            throw new NotImplementedException();
+            return new PrivateChat() {
+                channel = channel,
+                emotion = emotion,
+                src_name = src_name,
+                src_id = src_id,
+                dst_name = dst_name,
+                dst_id = dst_id,
+                msg = msg,
+                data = data,
+                src_level = src_level
+            };
         }
     }
 
@@ -275,6 +285,20 @@ public sealed class UnknownRpc : RpcSingle
     }
 }
 
+
+public sealed class PrivateChat : RpcSingle
+{
+    public int channel { get; internal set; }
+    public int emotion { get; internal set; }
+    public string src_name { get; internal set; }
+    public long src_id { get; internal set; }
+    public string dst_name { get; internal set; }
+    public int dst_id { get; internal set; }
+    public string msg { get; internal set; }
+    public List<object> data { get; internal set; }
+    public int src_level { get; internal set; }
+}
+
 class Api
 {
 
@@ -290,6 +314,10 @@ class Api
         if (resp is ApiResponse.UnknownSingle)
         {
             return new UnknownRpc(((ApiResponse.UnknownSingle)resp).Id, ((ApiResponse.UnknownSingle)resp).OctetStream);
+        }
+        if (resp is ApiResponse.PrivateChatSingle)
+        {
+            return (PwRpc)((ApiResponse.PrivateChatSingle)resp).IntoRpc();
         }
         if (resp is ApiResponse.Container)
         {
