@@ -15,7 +15,7 @@ class PwToHttpBridge : IProtocol {
         client.ReconnectionHappened.Subscribe(info =>
             Console.WriteLine($"Reconnection happened, type: {info.Type}"));
     }
-    public async Task<IObservable<Events>> EnterWorld(string serverAddr, Account account) {
+    public async Task<IObservable<PwRpc>> EnterWorld(string serverAddr, Account account) {
         var cmd = api.EnterWorld(serverAddr, account);
         Console.WriteLine(cmd);
         await client.StartOrFail();

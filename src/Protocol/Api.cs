@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -94,7 +95,7 @@ class SingleConverter : JsonConverter
     }
 }
 
-class UnknownSingleConverter: JsonConverter
+class UnknownSingleConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {
@@ -148,38 +149,52 @@ class ContainerConverter : JsonConverter
 }
 #endregion
 
-public class ApiResponse {
+public class ApiResponse
+{
     [JsonConverter(typeof(SingleConverter))]
-    public abstract class Single: Root {}
+    public abstract class Single : Root
+    {
+        public abstract object IntoRpc();
+    }
 
     [JsonConverter(typeof(ContainerConverter))]
-    public class Container: Root {
+    public class Container : Root
+    {
         public short Id { get; private set; }
         public List<Single> Packets { get; private set; }
 
-        public Container(short id, List<Single> packets) {
-            this.Id = id;
-            this.Packets = packets;
+        public Container(short id, List<Single> packets)
+        {
+            Id = id;
+            Packets = packets;
         }
     }
 
 
     [JsonConverter(typeof(UnknownSingleConverter))]
-    public sealed class UnknownSingle: Single { 
+    public sealed class UnknownSingle : Single
+    {
         public int Id { get; internal set; }
         public string OctetStream { get; internal set; }
 
-        public UnknownSingle(int id, string octetStream) {
-            this.Id = id;
-            this.OctetStream = octetStream;
+        public UnknownSingle(int id, string octetStream)
+        {
+            Id = id;
+            OctetStream = octetStream;
+        }
+
+        public override object IntoRpc()
+        {
+            return new UnknownRpc(Id, OctetStream);
         }
     }
 
 
     #region GameData
 
-    public abstract class GameData {}
-    sealed class ObjectMove: GameData {
+    public abstract class GameData { }
+    sealed class ObjectMove : GameData
+    {
         public int id { get; private set; }
         public Point3D dest { get; private set; }
         public int use_time { get; private set; }
@@ -190,28 +205,42 @@ public class ApiResponse {
     #endregion
 
 
-    public sealed class GameDataSingle: Single { 
+    public sealed class GameDataSingle : Single
+    {
         public GameData data;
-        public GameDataSingle(GameData data) {
+        public GameDataSingle(GameData data)
+        {
             this.data = data;
+        }
+
+        public override object IntoRpc()
+        {
+            throw new NotImplementedException();
         }
     }
 
 
-    public sealed class PrivateChatSingle: Single {
-        public int channel { get; set; } 
-        public int emotion { get; set; } 
-        public string src_name { get; set; } 
-        public long src_id { get; set; } 
-        public string dst_name { get; set; } 
-        public int dst_id { get; set; } 
-        public string msg { get; set; } 
-        public List<object> data { get; set; } 
-        public int src_level { get; set; } 
+    public sealed class PrivateChatSingle : Single
+    {
+        public int channel { get; set; }
+        public int emotion { get; set; }
+        public string src_name { get; set; }
+        public long src_id { get; set; }
+        public string dst_name { get; set; }
+        public int dst_id { get; set; }
+        public string msg { get; set; }
+        public List<object> data { get; set; }
+        public int src_level { get; set; }
+
+        public override object IntoRpc()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
-    public class SingleResponse {
+    public class SingleResponse
+    {
         public List<UnknownSingle> Unknown { get; internal set; }
         public PrivateChatSingle PrivateChat { get; internal set; }
     }
@@ -220,28 +249,51 @@ public class ApiResponse {
     public abstract class Root { }
 }
 
-public sealed class PwEvent {
-    public ApiResponse.Single Single { get; internal set; }
-    public ApiResponse.Container Container { get; internal set; }
+public abstract class PwRpc { }
+public abstract class RpcSingle : PwRpc { }
+public sealed class RpcContainer : PwRpc
+{
+    public short Id { get; private set; }
+    public List<RpcSingle> Packets { get; private set; }
+
+    public RpcContainer(short id, List<RpcSingle> packets)
+    {
+        Id = id;
+        Packets = packets;
+    }
+}
+
+public sealed class UnknownRpc : RpcSingle
+{
+    public int Id { get; internal set; }
+    public string OctetStream { get; internal set; }
+
+    public UnknownRpc(int id, string octetStream)
+    {
+        Id = id;
+        OctetStream = octetStream;
+    }
 }
 
 class Api
 {
 
-    public string EnterWorld(string serverAddr, Account account) {
+    public string EnterWorld(string serverAddr, Account account)
+    {
         return $"{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": {account.DefaultRoleIndex}, \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}";
     }
 
-    public PwEvent ParseEvent(string msg) {
+    public PwRpc ParseEvent(string msg)
+    {
         Console.WriteLine(msg);
         var resp = JsonConvert.DeserializeObject<ApiResponse.Root>(msg);
-        if (resp is ApiResponse.Single)
+        if (resp is ApiResponse.UnknownSingle)
         {
-            return new PwEvent() { Single = (ApiResponse.Single)resp };
+            return new UnknownRpc(((ApiResponse.UnknownSingle)resp).Id, ((ApiResponse.UnknownSingle)resp).OctetStream);
         }
         if (resp is ApiResponse.Container)
         {
-            return new PwEvent() { Container = (ApiResponse.Container)resp };
+            return new RpcContainer(((ApiResponse.Container)resp).Id, ((ApiResponse.Container)resp).Packets.Select(x => (RpcSingle)x.IntoRpc()).ToList());
         }
         throw new Exception("invalid api resp");
     }
