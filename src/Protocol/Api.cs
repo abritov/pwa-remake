@@ -9,7 +9,7 @@ class RootClassContractResolver : DefaultContractResolver
 {
     protected override JsonConverter ResolveContractConverter(Type objectType)
     {
-        if (typeof(RootConverter).IsAssignableFrom(objectType) && !objectType.IsAbstract)
+        if (typeof(ApiResponse.Root).IsAssignableFrom(objectType) && !objectType.IsAbstract)
             return null; // pretend TableSortRuleConvert is not specified (thus avoiding a stack overflow)
         return base.ResolveContractConverter(objectType);
     }
@@ -21,7 +21,7 @@ class RootConverter : JsonConverter
 
     public override bool CanConvert(Type objectType)
     {
-        return (objectType == typeof(ApiResponse.Single));
+        return (objectType == typeof(ApiResponse.Root));
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -54,7 +54,7 @@ class SingleClassContractResolver : DefaultContractResolver
 {
     protected override JsonConverter ResolveContractConverter(Type objectType)
     {
-        if (typeof(Single).IsAssignableFrom(objectType) && !objectType.IsAbstract)
+        if (typeof(ApiResponse.Single).IsAssignableFrom(objectType) && !objectType.IsAbstract)
             return null; // pretend TableSortRuleConvert is not specified (thus avoiding a stack overflow)
         return base.ResolveContractConverter(objectType);
     }
