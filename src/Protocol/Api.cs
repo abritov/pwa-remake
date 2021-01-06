@@ -78,6 +78,8 @@ class SingleConverter : JsonConverter
                 return JsonConvert.DeserializeObject<ApiResponse.UnknownSingle>(jo.ToString(), SpecifiedSubclassConversion);
             case "PrivateChat":
                 return JsonConvert.DeserializeObject<ApiResponse.PrivateChatSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
+            case "GameData":
+                return JsonConvert.DeserializeObject<ApiResponse.GameDataSingle>(jo.ToString(), SpecifiedSubclassConversion);
             default:
                 throw new Exception($"unknown Single {jo.First.Path}");
         }
@@ -121,7 +123,7 @@ class UnknownSingleConverter : JsonConverter
     }
 }
 
-#region ContainerJsonConverter
+
 class ContainerConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
@@ -147,18 +149,58 @@ class ContainerConverter : JsonConverter
         throw new NotImplementedException(); // won't be called because CanWrite returns false
     }
 }
-#endregion
+
+
+class GameDataConverter : JsonConverter
+{
+    public override bool CanConvert(Type objectType)
+    {
+        return (objectType == typeof(ApiResponse.GameDataSingle));
+    }
+
+    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    {
+        var jo = JObject.Load(reader).First.First.First.First.First;
+        var cmd = jo.Path.Replace("GameData.cmd.", "");
+        ApiResponse.GameCmd gameCmd;
+        switch (cmd)
+        {
+            case "ObjectMove":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMove>(jo.First.ToString());
+                break;
+            case "OwnExtProp":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString());
+                break;
+            default:
+                Console.WriteLine("unknown GameCmd");
+                throw new Exception("unknown GameCmd");
+        }
+        return new ApiResponse.GameDataSingle { Cmd = gameCmd };
+    }
+
+    public override bool CanWrite
+    {
+        get { return false; }
+    }
+
+    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    {
+        throw new NotImplementedException(); // won't be called because CanWrite returns false
+    }
+}
+
 
 public class ApiResponse
 {
     [JsonConverter(typeof(SingleConverter))]
-    public abstract class Single : Root
+    public abstract class Single
     {
         public abstract object IntoRpc();
     }
 
+
     [JsonConverter(typeof(ContainerConverter))]
-    public class Container : Root
+    public class Container
     {
         public short Id { get; private set; }
         public List<Single> Packets { get; private set; }
@@ -190,33 +232,33 @@ public class ApiResponse
     }
 
 
-    #region GameData
-
-    public abstract class GameData { }
-    sealed class ObjectMove : GameData
-    {
-        public int id { get; private set; }
-        public Point3D dest { get; private set; }
-        public int use_time { get; private set; }
-        public short speed { get; private set; }
-        public short move_mode { get; private set; }
-    }
-
-    #endregion
+    public abstract class GameCmd { }
+    public sealed class SelfInfo00Single : GameCmd { }
 
 
-    public sealed class GameDataSingle : Single
-    {
-        public GameData data;
-        public GameDataSingle(GameData data)
-        {
-            this.data = data;
-        }
+    [JsonConverter(typeof(GameDataConverter))]
+    public sealed class GameDataSingle: Single {
+        public GameCmd Cmd { get; set; }
 
         public override object IntoRpc()
         {
-            throw new NotImplementedException();
+            if (Cmd is SelfInfo00Single)
+            {
+                return new SelfInfo00();
+            }
+            throw new Exception("unknown GameData");
         }
+    }
+    public sealed class ObjectMove : GameCmd
+    {
+        public int id { get; set; }
+        public Point3D dest { get; set; }
+        public int use_time { get; set; }
+        public short speed { get; set; }
+        public short move_mode { get; set; }
+    }
+    public sealed class OwnExtProp : GameCmd {
+        public int status_point { get; set; }
     }
 
 
@@ -251,12 +293,15 @@ public class ApiResponse
 
     public class SingleResponse
     {
-        public List<UnknownSingle> Unknown { get; internal set; }
+        public UnknownSingle Unknown { get; internal set; }
         public PrivateChatSingle PrivateChat { get; internal set; }
+        public GameDataSingle GameData { get; internal set; }
     }
 
-    [JsonConverter(typeof(RootConverter))]
-    public abstract class Root { }
+    public sealed class Root {
+        public SingleResponse Single { get; set; }
+        public dynamic Container { get; set; }
+    }
 }
 
 public abstract class PwRpc { }
@@ -299,6 +344,17 @@ public sealed class PrivateChat : RpcSingle
     public int src_level { get; internal set; }
 }
 
+public abstract class GameCmd { }
+public sealed class SelfInfo00: GameCmd
+{
+
+}
+
+public sealed class GameData: RpcSingle
+{
+
+}
+
 class Api
 {
 
@@ -309,20 +365,17 @@ class Api
 
     public PwRpc ParseEvent(string msg)
     {
-        Console.WriteLine(msg);
+        // Console.WriteLine(msg);
         var resp = JsonConvert.DeserializeObject<ApiResponse.Root>(msg);
-        if (resp is ApiResponse.UnknownSingle)
-        {
-            return new UnknownRpc(((ApiResponse.UnknownSingle)resp).Id, ((ApiResponse.UnknownSingle)resp).OctetStream);
+        if (resp.Single != null) {
+            Console.WriteLine("Single parsed");
         }
-        if (resp is ApiResponse.PrivateChatSingle)
-        {
-            return (PwRpc)((ApiResponse.PrivateChatSingle)resp).IntoRpc();
+        if (resp.Container != null) {
+            Console.WriteLine("Container parsed");
+            var id = (short)resp.Container.First;
+            var packets = ((JArray)resp.Container.Last).Select(x => (RpcSingle)JsonConvert.DeserializeObject<ApiResponse.Single>(x.ToString()).IntoRpc()).ToList();
+            return new RpcContainer(id, packets);
         }
-        if (resp is ApiResponse.Container)
-        {
-            return new RpcContainer(((ApiResponse.Container)resp).Id, ((ApiResponse.Container)resp).Packets.Select(x => (RpcSingle)x.IntoRpc()).ToList());
-        }
-        throw new Exception("invalid api resp");
+        return new UnknownRpc(143, "");
     }
 }
