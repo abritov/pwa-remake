@@ -77,7 +77,7 @@ class SingleConverter : JsonConverter
             case "Unknown":
                 return JsonConvert.DeserializeObject<ApiResponse.UnknownSingle>(jo.ToString(), SpecifiedSubclassConversion);
             case "PrivateChat":
-                return JsonConvert.DeserializeObject<ApiResponse.PrivateChatSingle>(jo.ToString(), SpecifiedSubclassConversion);
+                return JsonConvert.DeserializeObject<ApiResponse.PrivateChatSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
             default:
                 throw new Exception($"unknown Single {jo.First.Path}");
         }
