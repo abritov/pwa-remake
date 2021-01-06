@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Akka.Actor;
 
 namespace PWARemake
 {
@@ -16,7 +17,11 @@ namespace PWARemake
                 .TakeUntil(new DateTimeOffset(2013, 1, 1, 12, 0, 0, TimeSpan.Zero));
             res3.Subscribe(val => Console.WriteLine(val));
             Console.WriteLine("Hello world!");
-            Console.Read();
+            
+            var system = ActorSystem.Create("PWA");
+            var actor = system.ActorOf(Props.Create(() => new SessionManager()));
+            actor.Tell(new AddSession("", ""));
+            Console.ReadLine();
         }
     }
 }
