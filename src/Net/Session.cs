@@ -1,5 +1,6 @@
 using System;
 using System.Reactive.Linq;
+using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
@@ -20,7 +21,9 @@ class Session : ReceiveActor {
     }
 
     private async void Start() {
-        var events = await protocol.EnterWorld("51.255.67.56:28082", new Account() { Login = "skidrow1", Password = "123456", DefaultRoleIndex = 1 });
-        events.Subscribe();
+        var events = await protocol.EnterWorld("51.255.67.56:28082", new Account() { Login = "skidrow2", Password = "123456", DefaultRoleIndex = 0 });
+        events.Where(x => x is PrivateChat).Do(x => {
+            Console.WriteLine(((PrivateChat)x).msg);
+        }).Subscribe();
     }
 }
