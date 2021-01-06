@@ -1,4 +1,4 @@
-class Role {
+public class Role {
     public Point3D Position { get; private set; }
     public int Hp { get; private set; }
     public int Mp { get; private set; }
