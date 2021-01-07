@@ -174,6 +174,9 @@ class GameDataConverter : JsonConverter
             case "OwnExtProp":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString());
                 break;
+            case "SelfInfo00":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString());
+                break;
             default:
                 Console.WriteLine($"unknown GameCmd {cmd}");
                 throw new Exception($"unknown GameCmd {cmd}");
