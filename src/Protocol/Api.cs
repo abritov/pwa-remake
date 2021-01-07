@@ -32,7 +32,7 @@ class RootConverter : JsonConverter
             case "Single":
                 return JsonConvert.DeserializeObject<ApiResponse.Single>(jo.First.First.ToString(), SpecifiedSubclassConversion);
             case "Container":
-                return JsonConvert.DeserializeObject<ApiResponse.Container>(jo.First.First.ToString(), SpecifiedSubclassConversion);
+                return JsonConvert.DeserializeObject<ApiResponse.Container>(jo.First.First.ToString());
             default:
                 throw new Exception();
         }
@@ -135,9 +135,9 @@ class ContainerConverter : JsonConverter
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        JObject jo = JObject.Load(reader);
-        var id = jo.First.First.First.Value<short>();
-        var packets = JsonConvert.DeserializeObject<List<ApiResponse.Single>>(jo.First.First.Last.ToString());
+        var jo = JArray.Load(reader);
+        var id = jo.First.Value<short>();
+        var packets = JsonConvert.DeserializeObject<List<ApiResponse.Single>>(jo.Last.ToString());
         return new ApiResponse.Container(id, packets);
     }
 
