@@ -344,10 +344,10 @@ public class ApiResponse
 
     public class SingleResponse
     {
-        public UnknownSingle Unknown { get; internal set; }
-        public PrivateChatSingle PrivateChat { get; internal set; }
-        public ChatMessageSingle ChatMessage { get; internal set; }
-        public GameDataSingle GameData { get; internal set; }
+        public UnknownSingle Unknown { get; set; }
+        public PrivateChatSingle PrivateChat { get; set; }
+        public ChatMessageSingle ChatMessage { get; set; }
+        public GameDataSingle GameData { get; set; }
     }
 
     public sealed class Root {
