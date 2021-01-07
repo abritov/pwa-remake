@@ -81,7 +81,7 @@ class SingleConverter : JsonConverter
             case "ChatMessage":
                 return JsonConvert.DeserializeObject<ApiResponse.ChatMessageSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
             case "GameData":
-                return JsonConvert.DeserializeObject<ApiResponse.GameDataSingle>(jo.ToString(), SpecifiedSubclassConversion);
+                return JsonConvert.DeserializeObject<ApiResponse.GameDataSingle>(jo.ToString());
             default:
                 throw new Exception($"unknown Single {jo.First.Path}");
         }
@@ -153,8 +153,19 @@ class ContainerConverter : JsonConverter
 }
 
 
+class GameDataClassContractResolver : DefaultContractResolver
+{
+    protected override JsonConverter ResolveContractConverter(Type objectType)
+    {
+        if (typeof(ApiResponse.GameCmd).IsAssignableFrom(objectType) && !objectType.IsAbstract)
+            return null; // pretend TableSortRuleConvert is not specified (thus avoiding a stack overflow)
+        return base.ResolveContractConverter(objectType);
+    }
+}
+
 class GameDataConverter : JsonConverter
 {
+    static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new GameDataClassContractResolver() };
     public override bool CanConvert(Type objectType)
     {
         return (objectType == typeof(ApiResponse.GameDataSingle));
@@ -168,16 +179,16 @@ class GameDataConverter : JsonConverter
         switch (cmd)
         {
             case "ObjectMove":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMove>(jo.First.ToString());
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMove>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "ObjectStopMove":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMove>(jo.First.ToString());
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMove>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "OwnExtProp":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString());
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "SelfInfo00":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString());
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             default:
                 Console.WriteLine($"unknown GameCmd {cmd}");
