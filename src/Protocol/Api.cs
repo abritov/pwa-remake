@@ -201,14 +201,14 @@ class GameDataConverter : JsonConverter
 public class ApiResponse
 {
     [JsonConverter(typeof(SingleConverter))]
-    public abstract class Single
+    public abstract class Single : Root
     {
         public abstract object IntoRpc();
     }
 
 
     [JsonConverter(typeof(ContainerConverter))]
-    public class Container
+    public class Container : Root
     {
         public short Id { get; private set; }
         public List<Single> Packets { get; private set; }
@@ -347,13 +347,16 @@ public class ApiResponse
         public UnknownSingle Unknown { get; set; }
         public PrivateChatSingle PrivateChat { get; set; }
         public ChatMessageSingle ChatMessage { get; set; }
-        public GameDataSingle GameData { get; set; }
+        public GameDataResponse GameData { get; set; }
     }
 
-    public sealed class Root {
+    public sealed class RootSimple {
         public SingleResponse Single { get; set; }
         public dynamic Container { get; set; }
     }
+
+    [JsonConverter(typeof(RootConverter))]
+    public abstract class Root { }
 }
 
 public abstract class PwRpc { }
