@@ -319,6 +319,21 @@ public class ApiResponse
     }
 
 
+    public sealed class GameDataCmdResponse 
+    {
+        public SelfInfo00Single SelfInfo00 { get; internal set; }
+        public ObjectMove ObjectMove { get; internal set; }
+        public ObjectStopMove ObjectStopMove { get; internal set; }
+        public OwnExtProp OwnExtProp { get; internal set; }
+    }
+
+
+    public sealed class GameDataResponse 
+    {
+        public GameDataCmdResponse Cmd { get; internal set; }
+    }
+
+
     public class SingleResponse
     {
         public UnknownSingle Unknown { get; internal set; }
