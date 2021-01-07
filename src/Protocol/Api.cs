@@ -172,8 +172,8 @@ class GameDataConverter : JsonConverter
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString());
                 break;
             default:
-                Console.WriteLine("unknown GameCmd");
-                throw new Exception("unknown GameCmd");
+                Console.WriteLine($"unknown GameCmd {cmd}");
+                throw new Exception($"unknown GameCmd {cmd}");
         }
         return new ApiResponse.GameDataSingle { Cmd = gameCmd };
     }
@@ -237,7 +237,7 @@ public class ApiResponse
 
 
     [JsonConverter(typeof(GameDataConverter))]
-    public sealed class GameDataSingle: Single {
+    public sealed class GameDataSingle : Single {
         public GameCmd Cmd { get; set; }
 
         public override object IntoRpc()
@@ -246,7 +246,7 @@ public class ApiResponse
             {
                 return new SelfInfo00();
             }
-            throw new Exception("unknown GameData");
+            throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
     }
     public sealed class ObjectMove : GameCmd
