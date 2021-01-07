@@ -241,8 +241,6 @@ public class ApiResponse
 
 
     public abstract class GameCmd { }
-    public sealed class SelfInfo00Single : GameCmd { }
-
 
     [JsonConverter(typeof(GameDataConverter))]
     public sealed class GameDataSingle : Single {
@@ -276,6 +274,7 @@ public class ApiResponse
     public sealed class OwnExtProp : GameCmd {
         public int status_point { get; set; }
     }
+    public sealed class SelfInfo00Single : GameCmd { }
 
 
     public sealed class ChatMessageSingle : Single
