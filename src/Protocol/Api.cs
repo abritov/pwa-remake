@@ -78,6 +78,8 @@ class SingleConverter : JsonConverter
                 return JsonConvert.DeserializeObject<ApiResponse.UnknownSingle>(jo.ToString(), SpecifiedSubclassConversion);
             case "PrivateChat":
                 return JsonConvert.DeserializeObject<ApiResponse.PrivateChatSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
+            case "ChatMessage":
+                return JsonConvert.DeserializeObject<ApiResponse.ChatMessageSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
             case "GameData":
                 return JsonConvert.DeserializeObject<ApiResponse.GameDataSingle>(jo.ToString(), SpecifiedSubclassConversion);
             default:
