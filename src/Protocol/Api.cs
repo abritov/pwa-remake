@@ -108,9 +108,9 @@ class UnknownSingleConverter : JsonConverter
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
     {
-        JObject jo = JObject.Load(reader);
-        var id = jo.First.First.First.Value<int>();
-        var octetStream = jo.First.First.Last.Value<string>();
+        var jo = JArray.Load(reader);
+        var id = jo.First.Value<int>();
+        var octetStream = jo.Last.Value<string>();
         return new ApiResponse.UnknownSingle(id, octetStream);
     }
 
