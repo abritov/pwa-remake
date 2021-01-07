@@ -270,7 +270,7 @@ public class ApiResponse
     }
 
 
-    public sealed class ChatMessage : Single
+    public sealed class ChatMessageSingle : Single
     {
         public int channel { get; set; }
         public int emotion { get; set; }
@@ -338,6 +338,7 @@ public class ApiResponse
     {
         public UnknownSingle Unknown { get; internal set; }
         public PrivateChatSingle PrivateChat { get; internal set; }
+        public ChatMessageSingle ChatMessage { get; internal set; }
         public GameDataSingle GameData { get; internal set; }
     }
 
