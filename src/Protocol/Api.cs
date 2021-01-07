@@ -257,6 +257,14 @@ public class ApiResponse
         public short speed { get; set; }
         public short move_mode { get; set; }
     }
+    public sealed class ObjectStopMove : GameCmd
+    {
+        public long id { get; set; }
+        public Point3D dest { get; set; }
+        public int speed { get; set; }
+        public int dir { get; set; }
+        public int move_mode { get; set; }
+    }
     public sealed class OwnExtProp : GameCmd {
         public int status_point { get; set; }
     }
