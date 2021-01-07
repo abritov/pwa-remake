@@ -168,6 +168,9 @@ class GameDataConverter : JsonConverter
             case "ObjectMove":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMove>(jo.First.ToString());
                 break;
+            case "ObjectStopMove":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMove>(jo.First.ToString());
+                break;
             case "OwnExtProp":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString());
                 break;
