@@ -270,6 +270,26 @@ public class ApiResponse
     }
 
 
+    public sealed class ChatMessage : Single
+    {
+        public int channel { get; set; }
+        public int emotion { get; set; }
+        public long sender { get; set; }
+        public string msg { get; set; }
+
+        public override object IntoRpc()
+        {
+            return new ChatMessage() 
+            {
+                channel = channel,
+                emotion = emotion,
+                sender = sender,
+                msg = msg
+            };
+        }
+    }
+
+
     public sealed class PrivateChatSingle : Single
     {
         public int channel { get; set; }
@@ -336,6 +356,15 @@ public sealed class UnknownRpc : RpcSingle
         Id = id;
         OctetStream = octetStream;
     }
+}
+
+
+public sealed class ChatMessage : RpcSingle
+{
+    public int channel { get; internal set; }
+    public int emotion { get; internal set; }
+    public long sender { get; internal set; }
+    public string msg { get; internal set; }
 }
 
 
