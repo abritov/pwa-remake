@@ -29,7 +29,7 @@ class SessionManager : ReceiveActor
         {
             log.Info("Received message: {0}", msg.Login);
             var session = Context.ActorOf(Props.Create(() => 
-                new Session(new PwToHttpBridge(new Api(), new Uri("ws://localhost:29001/140/ws")), Context.Self)));
+                new Session(new PwToHttpBridge(new Api(), new Uri("ws://pw-http-bridge.herokuapp.com/140/ws")), Context.Self)));
             sessions.Add(session);
             session.Tell("start!");
             Sender.Tell("Ok");
