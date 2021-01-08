@@ -261,7 +261,20 @@ class ApiResponse
         {
             if (Cmd is SelfInfo00Single)
             {
-                return new SelfInfo00();
+                return new SelfInfo00() 
+                {
+                    level = ((SelfInfo00Single)Cmd).level,
+                    state = ((SelfInfo00Single)Cmd).state,
+                    level2 = ((SelfInfo00Single)Cmd).level2,
+                    hp = ((SelfInfo00Single)Cmd).hp,
+                    max_hp = ((SelfInfo00Single)Cmd).max_hp,
+                    mp = ((SelfInfo00Single)Cmd).mp,
+                    max_mp = ((SelfInfo00Single)Cmd).max_mp,
+                    exp = ((SelfInfo00Single)Cmd).exp,
+                    sp = ((SelfInfo00Single)Cmd).sp,
+                    ap = ((SelfInfo00Single)Cmd).ap,
+                    max_ap = ((SelfInfo00Single)Cmd).max_ap,
+                };
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
