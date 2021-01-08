@@ -451,7 +451,7 @@ class ApiResponse
             {
                 base_prop = base_prop.IntoRpc(),
                 move_prop = move_prop.IntoRpc(),
-                atk_pror = atk_prop.IntoRpc(),
+                atk_prop = atk_prop.IntoRpc(),
                 def_prop = def_prop.IntoRpc(),
                 max_ap = max_ap,
             };
