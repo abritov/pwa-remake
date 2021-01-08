@@ -494,13 +494,38 @@ public sealed class PrivateChat : RpcSingle
     public int src_level { get; internal set; }
 }
 
-public abstract class GameCmd { }
-public sealed class SelfInfo00: GameCmd
+public abstract class GameData : RpcSingle { }
+public sealed class ObjectMove : GameData 
 {
-
+    public int id { get; set; }
+    public Point3D dest { get; set; }
+    public int use_time { get; set; }
+    public short speed { get; set; }
+    public short move_mode { get; set; }
 }
-
-public sealed class GameData: RpcSingle
+public sealed class ObjectStopMove : GameData 
+{
+    public long id { get; set; }
+    public Point3D dest { get; set; }
+    public int speed { get; set; }
+    public int dir { get; set; }
+    public int move_mode { get; set; }
+}
+public sealed class SelfInfo00: GameData
+{
+    public int level { get; set; }
+    public int state { get; set; }
+    public int level2 { get; set; }
+    public int hp { get; set; }
+    public int max_hp { get; set; }
+    public int mp { get; set; }
+    public int max_mp { get; set; }
+    public int exp { get; set; }
+    public int sp { get; set; }
+    public int ap { get; set; }
+    public int max_ap { get; set; }
+}
+public sealed class OwnExtProp: GameData
 {
 
 }
