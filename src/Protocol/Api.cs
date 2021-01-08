@@ -190,6 +190,9 @@ class GameDataConverter : JsonConverter
             case "SelfInfo00":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "OwnInventoryDetailData":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryDetailDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             default:
                 Console.WriteLine($"unknown GameCmd {cmd}");
                 throw new Exception($"unknown GameCmd {cmd}");
@@ -314,6 +317,10 @@ class ApiResponse
                     vigour = ((OwnExtPropSingle)Cmd).vigour,
                     prop = ((OwnExtPropSingle)Cmd).prop.IntoRpc(),
                 };
+            }
+            if (Cmd is OwnInventoryDetailDataSingle)
+            {
+                return ((OwnInventoryDetailDataSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
@@ -502,6 +509,22 @@ class ApiResponse
         public int ap { get; set; }
         public int max_ap { get; set; }
     }
+    public sealed class OwnInventoryDetailDataSingle : GameCmd
+    {
+        public int by_package { get; set; } 
+        public int inventory_size { get; set; } 
+        public List<byte> content { get; set; } 
+
+        public OwnInventoryDetailData IntoRpc()
+        {
+            return new OwnInventoryDetailData()
+            {
+                by_package = by_package,
+                inventory_size = inventory_size,
+                content = content
+            };
+        }
+    }
 
 
     public sealed class ChatMessageSingle : Single
@@ -595,7 +618,7 @@ class Api
 
     public PwRpc ParseEvent(string msg)
     {
-        // Console.WriteLine(msg);
+        Console.WriteLine(msg);
         try
         {
             var resp = JsonConvert.DeserializeObject<ApiResponse.Root>(msg);
