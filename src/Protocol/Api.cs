@@ -282,8 +282,71 @@ public class ApiResponse
         public int dir { get; set; }
         public int move_mode { get; set; }
     }
+    public class BaseProp
+    {
+        public int vitality { get; set; } 
+        public int energy { get; set; } 
+        public int strength { get; set; } 
+        public int agility { get; set; } 
+        public int max_hp { get; set; } 
+        public int max_mp { get; set; } 
+        public int hp_gen { get; set; } 
+        public int mp_gen { get; set; } 
+    }
+
+    public class MoveProp
+    {
+        public double walk_speed { get; set; } 
+        public double run_speed { get; set; } 
+        public double swim_speed { get; set; } 
+        public double flight_speed { get; set; } 
+    }
+
+    public class AddonDamage
+    {
+        public int damage_low { get; set; } 
+        public int damage_high { get; set; } 
+    }
+
+    public class AtkPror
+    {
+        public int attack { get; set; } 
+        public int damage_low { get; set; } 
+        public int damage_high { get; set; } 
+        public int attack_speed { get; set; } 
+        public double attack_range { get; set; } 
+        public List<AddonDamage> addon_damage { get; set; } 
+        public int damage_magic_low { get; set; } 
+        public int damage_magic_high { get; set; } 
+    }
+
+    public class DefProp
+    {
+        public List<int> resistance { get; set; } 
+        public int defense { get; set; } 
+        public int armor { get; set; } 
+    }
+
+    public class RoleExtProp
+    {
+        public BaseProp base_prop { get; set; } 
+        public MoveProp move_prop { get; set; } 
+        public AtkPror atk_pror { get; set; } 
+        public DefProp def_prop { get; set; } 
+        public int max_ap { get; set; } 
+    }
     public sealed class OwnExtProp : GameCmd {
-        public int status_point { get; set; }
+        public int status_point { get; set; } 
+        public int? attack_degree { get; set; } 
+        public int? defend_degree { get; set; } 
+        public int? crit_rate { get; set; } 
+        public int? crit_damage_bonus { get; set; } 
+        public int? invisible_degree { get; set; } 
+        public int? anti_invisible_degree { get; set; } 
+        public int? penetration { get; set; } 
+        public int? resilience { get; set; } 
+        public int? vigour { get; set; } 
+        public RoleExtProp prop { get; set; } 
     }
     public sealed class SelfInfo00Single : GameCmd
     {
