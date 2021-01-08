@@ -320,7 +320,7 @@ class ApiResponse
     }
     public sealed class ObjectMoveSingle : GameCmd
     {
-        public int id { get; set; }
+        public long id { get; set; }
         public Point3D dest { get; set; }
         public int use_time { get; set; }
         public short speed { get; set; }

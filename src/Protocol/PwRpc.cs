@@ -52,7 +52,7 @@ public sealed class PrivateChat : RpcSingle
 public abstract class GameData : RpcSingle { }
 public sealed class ObjectMove : GameData 
 {
-    public int id { get; set; }
+    public long id { get; set; }
     public Point3D dest { get; set; }
     public int use_time { get; set; }
     public short speed { get; set; }
