@@ -108,7 +108,7 @@ public class AddonDamage
     public int damage_high { get; set; } 
 }
 
-public class AtkPror
+public class AtkProp
 {
     public int attack { get; set; } 
     public int damage_low { get; set; } 
@@ -131,7 +131,7 @@ public class RoleExtProp
 {
     public BaseProp base_prop { get; set; } 
     public MoveProp move_prop { get; set; } 
-    public AtkPror atk_pror { get; set; } 
+    public AtkProp atk_prop { get; set; } 
     public DefProp def_prop { get; set; } 
     public int max_ap { get; set; } 
 }

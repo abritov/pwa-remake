@@ -298,6 +298,23 @@ class ApiResponse
                     max_ap = ((SelfInfo00Single)Cmd).max_ap,
                 };
             }
+            if (Cmd is OwnExtPropSingle)
+            {
+                return new OwnExtProp() 
+                {
+                    status_point = ((OwnExtPropSingle)Cmd).status_point,
+                    attack_degree = ((OwnExtPropSingle)Cmd).attack_degree,
+                    defend_degree = ((OwnExtPropSingle)Cmd).defend_degree,
+                    crit_rate = ((OwnExtPropSingle)Cmd).crit_rate,
+                    crit_damage_bonus = ((OwnExtPropSingle)Cmd).crit_damage_bonus,
+                    invisible_degree = ((OwnExtPropSingle)Cmd).invisible_degree,
+                    anti_invisible_degree = ((OwnExtPropSingle)Cmd).anti_invisible_degree,
+                    penetration = ((OwnExtPropSingle)Cmd).penetration,
+                    resilience = ((OwnExtPropSingle)Cmd).resilience,
+                    vigour = ((OwnExtPropSingle)Cmd).vigour,
+                    prop = ((OwnExtPropSingle)Cmd).prop.IntoRpc(),
+                };
+            }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
     }
@@ -317,7 +334,7 @@ class ApiResponse
         public int dir { get; set; }
         public int move_mode { get; set; }
     }
-    public class BaseProp
+    public class BasePropSingle
     {
         public int vitality { get; set; } 
         public int energy { get; set; } 
@@ -327,48 +344,118 @@ class ApiResponse
         public int max_mp { get; set; } 
         public int hp_gen { get; set; } 
         public int mp_gen { get; set; } 
+
+        public BaseProp IntoRpc() {
+            return new BaseProp()
+            {
+                vitality = vitality,
+                energy = energy,
+                strength = strength,
+                agility = agility,
+                max_hp = max_hp,
+                max_mp = max_mp,
+                hp_gen = hp_gen,
+                mp_gen = mp_gen,
+            };
+        }
     }
 
-    public class MoveProp
+    public class MovePropSingle
     {
         public double walk_speed { get; set; } 
         public double run_speed { get; set; } 
         public double swim_speed { get; set; } 
         public double flight_speed { get; set; } 
+
+        public MoveProp IntoRpc() 
+        {
+            return new MoveProp()
+            {
+                walk_speed = walk_speed,
+                run_speed = run_speed,
+                swim_speed = swim_speed,
+                flight_speed = flight_speed
+            };
+        }
     }
 
-    public class AddonDamage
+    public class AddonDamageSingle
     {
         public int damage_low { get; set; } 
         public int damage_high { get; set; } 
+
+        public AddonDamage IntoRpc() 
+        {
+            return new AddonDamage() 
+            {
+                damage_low = damage_low,
+                damage_high = damage_high,
+            };
+        }
     }
 
-    public class AtkPror
+    public class AtkPropSingle
     {
         public int attack { get; set; } 
         public int damage_low { get; set; } 
         public int damage_high { get; set; } 
         public int attack_speed { get; set; } 
         public double attack_range { get; set; } 
-        public List<AddonDamage> addon_damage { get; set; } 
+        public List<AddonDamageSingle> addon_damage { get; set; } 
         public int damage_magic_low { get; set; } 
         public int damage_magic_high { get; set; } 
+
+        public AtkProp IntoRpc() 
+        {
+            return new AtkProp() 
+            {
+                attack = attack,
+                damage_low = damage_low,
+                damage_high = damage_high,
+                attack_speed = attack_speed,
+                attack_range = attack_range,
+                addon_damage = addon_damage.Select(x => x.IntoRpc()).ToList(),
+                damage_magic_low = damage_magic_low,
+                damage_magic_high = damage_magic_high
+            };
+        }
     }
 
-    public class DefProp
+    public class DefPropSingle
     {
         public List<int> resistance { get; set; } 
         public int defense { get; set; } 
         public int armor { get; set; } 
+
+        public DefProp IntoRpc()
+        {
+            return new DefProp()
+            {
+                resistance = resistance,
+                defense = defense,
+                armor = armor
+            };
+        }
     }
 
-    public class RoleExtProp
+    public class RoleExtPropSingle
     {
-        public BaseProp base_prop { get; set; } 
-        public MoveProp move_prop { get; set; } 
-        public AtkPror atk_pror { get; set; } 
-        public DefProp def_prop { get; set; } 
+        public BasePropSingle base_prop { get; set; } 
+        public MovePropSingle move_prop { get; set; } 
+        public AtkPropSingle atk_prop { get; set; } 
+        public DefPropSingle def_prop { get; set; } 
         public int max_ap { get; set; } 
+
+        public RoleExtProp IntoRpc() {
+            return new RoleExtProp()
+            {
+                base_prop = base_prop.IntoRpc(),
+                move_prop = move_prop.IntoRpc(),
+                atk_pror = atk_prop.IntoRpc(),
+                def_prop = def_prop.IntoRpc(),
+                max_ap = max_ap,
+            };
+        }
     }
     public sealed class OwnExtPropSingle : GameCmd {
         public int status_point { get; set; } 
@@ -381,7 +468,25 @@ class ApiResponse
         public int? penetration { get; set; } 
         public int? resilience { get; set; } 
         public int? vigour { get; set; } 
-        public RoleExtProp prop { get; set; } 
+        public RoleExtPropSingle prop { get; set; } 
+
+        public OwnExtProp IntoRpc()
+        {
+            return new OwnExtProp()
+            {
+                status_point = status_point,
+                attack_degree = attack_degree,
+                defend_degree = defend_degree,
+                crit_rate = crit_rate,
+                crit_damage_bonus = crit_damage_bonus,
+                invisible_degree = invisible_degree,
+                anti_invisible_degree = anti_invisible_degree,
+                penetration = penetration,
+                resilience = resilience,
+                vigour = vigour,
+                prop = prop.IntoRpc()
+            };
+        }
     }
     public sealed class SelfInfo00Single : GameCmd
     {
