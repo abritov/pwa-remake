@@ -516,16 +516,25 @@ class Api
     public PwRpc ParseEvent(string msg)
     {
         // Console.WriteLine(msg);
-        var resp = JsonConvert.DeserializeObject<ApiResponse.Root>(msg);
-        if (resp.Single != null) {
-            Console.WriteLine("Single parsed");
+        try
+        {
+            var resp = JsonConvert.DeserializeObject<ApiResponse.Root>(msg);
+            if (resp is ApiResponse.Single)
+            {
+                return (PwRpc)((ApiResponse.Single)resp).IntoRpc();
+            }
+            if (resp is ApiResponse.Container)
+            {
+                return new RpcContainer(
+                    ((ApiResponse.Container)resp).Id,
+                    ((ApiResponse.Container)resp).Packets.Select(x => (RpcSingle)x.IntoRpc()).ToList()
+                );
+            }
         }
-        if (resp.Container != null) {
-            Console.WriteLine("Container parsed");
-            var id = (short)resp.Container.First;
-            var packets = ((JArray)resp.Container.Last).Select(x => (RpcSingle)JsonConvert.DeserializeObject<ApiResponse.Single>(x.ToString()).IntoRpc()).ToList();
-            return new RpcContainer(id, packets);
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
-        return new UnknownRpc(143, "");
+        throw new Exception("ParseEvent invalid data");
     }
 }
