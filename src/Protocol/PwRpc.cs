@@ -161,3 +161,13 @@ public sealed class OwnInventoryDetailData : GameData
     public int inventory_size { get; set; } 
     public List<byte> content { get; set; } 
 }
+public sealed class UnknownGameCmd : GameData
+{
+    public int Id { get; set; }
+    public string OctetStream { get; set; }
+    public UnknownGameCmd(int id, string octetStream)
+    {
+        Id = id;
+        OctetStream = octetStream;
+    }
+}

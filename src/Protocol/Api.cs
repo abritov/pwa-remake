@@ -196,6 +196,11 @@ class GameDataConverter : JsonConverter
             case "OwnInventoryDetailData":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryDetailDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "Unknown":
+                var id = jo.First.First.Value<int>();
+                var octetStream = jo.First.Last.Value<string>();
+                gameCmd = new ApiResponse.UnknownGameCmdSingle(id, octetStream);
+                break;
             default:
                 Console.WriteLine($"unknown GameCmd {cmd}");
                 throw new Exception($"unknown GameCmd {cmd}");
@@ -330,6 +335,20 @@ class ApiResponse
                 return ((OwnInventoryDetailDataSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
+        }
+    }
+    public sealed class UnknownGameCmdSingle : GameCmd
+    {
+        public int Id { get; set; }
+        public string OctetStream { get; set; }
+        public UnknownGameCmdSingle(int id, string octetStream)
+        {
+            Id = id;
+            OctetStream = octetStream;
+        }
+
+        public UnknownGameCmd IntoRpc() {
+            return new UnknownGameCmd(Id, OctetStream);
         }
     }
     public sealed class ObjectMoveSingle : GameCmd
