@@ -149,6 +149,12 @@ public sealed class OwnExtProp : GameData
     public int? vigour { get; set; } 
     public RoleExtProp prop { get; set; } 
 }
+public sealed class OwnInventoryInfo : GameData
+{
+    public int by_package { get; set; } 
+    public int inventory_size { get; set; } 
+    public List<byte> content { get; set; } 
+}
 public sealed class OwnInventoryDetailData : GameData
 {
     public int by_package { get; set; } 

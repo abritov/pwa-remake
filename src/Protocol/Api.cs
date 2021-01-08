@@ -190,6 +190,9 @@ class GameDataConverter : JsonConverter
             case "SelfInfo00":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "OwnInventoryData":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryInfoSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             case "OwnInventoryDetailData":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryDetailDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
@@ -317,6 +320,10 @@ class ApiResponse
                     vigour = ((OwnExtPropSingle)Cmd).vigour,
                     prop = ((OwnExtPropSingle)Cmd).prop.IntoRpc(),
                 };
+            }
+            if (Cmd is OwnInventoryInfoSingle)
+            {
+                return ((OwnInventoryInfoSingle)Cmd).IntoRpc();
             }
             if (Cmd is OwnInventoryDetailDataSingle)
             {
@@ -508,6 +515,22 @@ class ApiResponse
         public int sp { get; set; }
         public int ap { get; set; }
         public int max_ap { get; set; }
+    }
+    public sealed class OwnInventoryInfoSingle : GameCmd
+    {
+        public int by_package { get; set; } 
+        public int inventory_size { get; set; } 
+        public List<byte> content { get; set; } 
+
+        public OwnInventoryInfo IntoRpc()
+        {
+            return new OwnInventoryInfo()
+            {
+                by_package = by_package,
+                inventory_size = inventory_size,
+                content = content
+            };
+        }
     }
     public sealed class OwnInventoryDetailDataSingle : GameCmd
     {
