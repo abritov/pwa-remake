@@ -161,6 +161,17 @@ public sealed class OwnInventoryDetailData : GameData
     public int inventory_size { get; set; } 
     public List<byte> content { get; set; } 
 }
+public class Skill
+{
+    public int id { get; set; } 
+    public int level { get; set; } 
+    public int ability { get; set; } 
+}
+
+public class SkillData
+{
+    public List<Skill> skills { get; set; } 
+}
 public sealed class UnknownGameCmd : GameData
 {
     public int Id { get; set; }

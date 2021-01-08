@@ -196,6 +196,9 @@ class GameDataConverter : JsonConverter
             case "OwnInventoryDetailData":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryDetailDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "SkillData":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SkillDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             case "Unknown":
                 var id = jo.First.First.Value<int>();
                 var octetStream = jo.First.Last.Value<string>();
@@ -333,6 +336,10 @@ class ApiResponse
             if (Cmd is OwnInventoryDetailDataSingle)
             {
                 return ((OwnInventoryDetailDataSingle)Cmd).IntoRpc();
+            }
+            if (Cmd is SkillDataSingle)
+            {
+                return ((SkillDataSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
@@ -564,6 +571,35 @@ class ApiResponse
                 by_package = by_package,
                 inventory_size = inventory_size,
                 content = content
+            };
+        }
+    }
+    public class SkillSingle
+    {
+        public int id { get; set; } 
+        public int level { get; set; } 
+        public int ability { get; set; } 
+
+        public Skill IntoRpc()
+        {
+            return new Skill()
+            {
+                id = id,
+                level = level,
+                ability = ability
+            };
+        }
+    }
+
+    public class SkillDataSingle : GameCmd
+    {
+        public List<SkillSingle> skills { get; set; } 
+
+        public SkillData IntoRpc()
+        {
+            return new SkillData()
+            {
+                skills = skills.Select(x => x.IntoRpc()).ToList()
             };
         }
     }
