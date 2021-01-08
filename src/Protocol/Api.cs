@@ -179,13 +179,13 @@ class GameDataConverter : JsonConverter
         switch (cmd)
         {
             case "ObjectMove":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMove>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMoveSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "ObjectStopMove":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMove>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMoveSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "OwnExtProp":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtProp>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtPropSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "SelfInfo00":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString(), SpecifiedSubclassConversion);
@@ -259,6 +259,17 @@ class ApiResponse
 
         public override object IntoRpc()
         {
+            if (Cmd is ObjectMoveSingle) 
+            {
+                return new ObjectMove() 
+                {
+                    id = ((ObjectMoveSingle)Cmd).id,
+                    dest = ((ObjectMoveSingle)Cmd).dest,
+                    use_time = ((ObjectMoveSingle)Cmd).use_time,
+                    speed = ((ObjectMoveSingle)Cmd).speed,
+                    move_mode = ((ObjectMoveSingle)Cmd).move_mode,
+                };
+            }
             if (Cmd is SelfInfo00Single)
             {
                 return new SelfInfo00() 
@@ -279,7 +290,7 @@ class ApiResponse
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
     }
-    public sealed class ObjectMove : GameCmd
+    public sealed class ObjectMoveSingle : GameCmd
     {
         public int id { get; set; }
         public Point3D dest { get; set; }
@@ -287,7 +298,7 @@ class ApiResponse
         public short speed { get; set; }
         public short move_mode { get; set; }
     }
-    public sealed class ObjectStopMove : GameCmd
+    public sealed class ObjectStopMoveSingle : GameCmd
     {
         public long id { get; set; }
         public Point3D dest { get; set; }
@@ -348,7 +359,7 @@ class ApiResponse
         public DefProp def_prop { get; set; } 
         public int max_ap { get; set; } 
     }
-    public sealed class OwnExtProp : GameCmd {
+    public sealed class OwnExtPropSingle : GameCmd {
         public int status_point { get; set; } 
         public int? attack_degree { get; set; } 
         public int? defend_degree { get; set; } 
@@ -429,9 +440,9 @@ class ApiResponse
     public sealed class GameDataCmdResponse 
     {
         public SelfInfo00Single SelfInfo00 { get; internal set; }
-        public ObjectMove ObjectMove { get; internal set; }
-        public ObjectStopMove ObjectStopMove { get; internal set; }
-        public OwnExtProp OwnExtProp { get; internal set; }
+        public ObjectMoveSingle ObjectMove { get; internal set; }
+        public ObjectStopMoveSingle ObjectStopMove { get; internal set; }
+        public OwnExtPropSingle OwnExtProp { get; internal set; }
     }
 
 
