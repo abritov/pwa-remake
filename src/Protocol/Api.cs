@@ -285,7 +285,20 @@ public class ApiResponse
     public sealed class OwnExtProp : GameCmd {
         public int status_point { get; set; }
     }
-    public sealed class SelfInfo00Single : GameCmd { }
+    public sealed class SelfInfo00Single : GameCmd
+    {
+        public int level { get; set; }
+        public int state { get; set; }
+        public int level2 { get; set; }
+        public int hp { get; set; }
+        public int max_hp { get; set; }
+        public int mp { get; set; }
+        public int max_mp { get; set; }
+        public int exp { get; set; }
+        public int sp { get; set; }
+        public int ap { get; set; }
+        public int max_ap { get; set; }
+    }
 
 
     public sealed class ChatMessageSingle : Single
