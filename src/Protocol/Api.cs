@@ -209,7 +209,7 @@ class GameDataConverter : JsonConverter
 }
 
 
-public class ApiResponse
+class ApiResponse
 {
     [JsonConverter(typeof(SingleConverter))]
     public abstract class Single : Root
