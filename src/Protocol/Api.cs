@@ -270,6 +270,17 @@ class ApiResponse
                     move_mode = ((ObjectMoveSingle)Cmd).move_mode,
                 };
             }
+            if (Cmd is ObjectStopMoveSingle) 
+            {
+                return new ObjectStopMove() 
+                {
+                    id = ((ObjectStopMoveSingle)Cmd).id,
+                    dest = ((ObjectStopMoveSingle)Cmd).dest,
+                    speed = ((ObjectStopMoveSingle)Cmd).speed,
+                    dir = ((ObjectStopMoveSingle)Cmd).dir,
+                    move_mode = ((ObjectStopMoveSingle)Cmd).move_mode,
+                };
+            }
             if (Cmd is SelfInfo00Single)
             {
                 return new SelfInfo00() 
