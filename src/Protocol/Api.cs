@@ -672,7 +672,7 @@ class ApiResponse
         public string src_name { get; set; }
         public long src_id { get; set; }
         public string dst_name { get; set; }
-        public int dst_id { get; set; }
+        public long dst_id { get; set; }
         public string msg { get; set; }
         public List<object> data { get; set; }
         public int src_level { get; set; }

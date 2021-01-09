@@ -43,7 +43,7 @@ public sealed class PrivateChat : RpcSingle
     public string src_name { get; internal set; }
     public long src_id { get; internal set; }
     public string dst_name { get; internal set; }
-    public int dst_id { get; internal set; }
+    public long dst_id { get; internal set; }
     public string msg { get; internal set; }
     public List<object> data { get; internal set; }
     public int src_level { get; internal set; }
