@@ -199,6 +199,9 @@ class GameDataConverter : JsonConverter
             case "SkillData":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.SkillDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "TrashboxPwdState":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.TrashboxPwdStateSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             case "Unknown":
                 var id = jo.First.First.Value<int>();
                 var octetStream = jo.First.Last.Value<string>();
@@ -340,6 +343,10 @@ class ApiResponse
             if (Cmd is SkillDataSingle)
             {
                 return ((SkillDataSingle)Cmd).IntoRpc();
+            }
+            if (Cmd is TrashboxPwdStateSingle)
+            {
+                return ((TrashboxPwdStateSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
@@ -600,6 +607,19 @@ class ApiResponse
             return new SkillData()
             {
                 skills = skills.Select(x => x.IntoRpc()).ToList()
+            };
+        }
+    }
+
+    public class TrashboxPwdStateSingle : GameCmd
+    {
+        public byte has_passwd { get; set; }
+
+        public TrashboxPwdState IntoRpc()
+        {
+            return new TrashboxPwdState()
+            {
+                has_passwd = has_passwd == 1
             };
         }
     }

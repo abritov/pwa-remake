@@ -172,6 +172,10 @@ public class SkillData
 {
     public List<Skill> skills { get; set; } 
 }
+public class TrashboxPwdState : GameData
+{
+    public bool has_passwd { get; set; }
+}
 public sealed class UnknownGameCmd : GameData
 {
     public int Id { get; set; }
