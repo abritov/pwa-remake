@@ -176,6 +176,10 @@ public class TrashboxPwdState : GameData
 {
     public bool has_passwd { get; set; }
 }
+public class HostReputation
+{
+    public int reputation { get; set; } 
+}
 public sealed class UnknownGameCmd : GameData
 {
     public int Id { get; set; }

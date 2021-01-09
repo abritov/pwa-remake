@@ -202,6 +202,9 @@ class GameDataConverter : JsonConverter
             case "TrashboxPwdState":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.TrashboxPwdStateSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "HostReputation":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.HostReputationSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             case "Unknown":
                 var id = jo.First.First.Value<int>();
                 var octetStream = jo.First.Last.Value<string>();
@@ -347,6 +350,10 @@ class ApiResponse
             if (Cmd is TrashboxPwdStateSingle)
             {
                 return ((TrashboxPwdStateSingle)Cmd).IntoRpc();
+            }
+            if (Cmd is HostReputationSingle)
+            {
+                return ((HostReputationSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
@@ -620,6 +627,19 @@ class ApiResponse
             return new TrashboxPwdState()
             {
                 has_passwd = has_passwd == 1
+            };
+        }
+    }
+
+    public class HostReputationSingle : GameCmd
+    {
+        public int reputation { get; set; } 
+
+        public HostReputation IntoRpc() 
+        {
+            return new HostReputation()
+            {
+                reputation = reputation
             };
         }
     }
