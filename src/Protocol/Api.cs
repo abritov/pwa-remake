@@ -255,10 +255,10 @@ class ApiResponse
     [JsonConverter(typeof(UnknownSingleConverter))]
     public sealed class UnknownSingle : Single
     {
-        public int Id { get; internal set; }
+        public long Id { get; internal set; }
         public string OctetStream { get; internal set; }
 
-        public UnknownSingle(int id, string octetStream)
+        public UnknownSingle(long id, string octetStream)
         {
             Id = id;
             OctetStream = octetStream;

@@ -16,10 +16,10 @@ public sealed class RpcContainer : PwRpc
 
 public sealed class UnknownRpc : RpcSingle
 {
-    public int Id { get; internal set; }
+    public long Id { get; internal set; }
     public string OctetStream { get; internal set; }
 
-    public UnknownRpc(int id, string octetStream)
+    public UnknownRpc(long id, string octetStream)
     {
         Id = id;
         OctetStream = octetStream;
