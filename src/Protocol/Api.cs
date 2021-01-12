@@ -342,6 +342,10 @@ class ApiResponse
             {
                 return ((HostReputationSingle)Cmd).IntoRpc();
             }
+            if (Cmd is UnknownGameCmdSingle)
+            {
+                return ((UnknownGameCmdSingle)Cmd).IntoRpc();
+            }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
     }
