@@ -168,7 +168,7 @@ public class Skill
     public int ability { get; set; } 
 }
 
-public class SkillData
+public class SkillData : GameData
 {
     public List<Skill> skills { get; set; } 
 }
