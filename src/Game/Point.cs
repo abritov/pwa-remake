@@ -1,5 +1,12 @@
 public class Point3D {
-    public float X { get; private set; }
-    public float Z { get; private set; }
-    public float Y { get; private set; }
+    public float X { get; internal set; }
+    public float Z { get; internal set; }
+    public float Y { get; internal set; }
+
+    public Point3D(float x, float z, float y)
+    {
+        X = x;
+        Z = z;
+        Y = y;
+    }
 }
