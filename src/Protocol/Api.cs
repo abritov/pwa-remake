@@ -320,20 +320,7 @@ class ApiResponse
             }
             if (Cmd is OwnExtPropSingle)
             {
-                return new OwnExtProp() 
-                {
-                    status_point = ((OwnExtPropSingle)Cmd).status_point,
-                    attack_degree = ((OwnExtPropSingle)Cmd).attack_degree,
-                    defend_degree = ((OwnExtPropSingle)Cmd).defend_degree,
-                    crit_rate = ((OwnExtPropSingle)Cmd).crit_rate,
-                    crit_damage_bonus = ((OwnExtPropSingle)Cmd).crit_damage_bonus,
-                    invisible_degree = ((OwnExtPropSingle)Cmd).invisible_degree,
-                    anti_invisible_degree = ((OwnExtPropSingle)Cmd).anti_invisible_degree,
-                    penetration = ((OwnExtPropSingle)Cmd).penetration,
-                    resilience = ((OwnExtPropSingle)Cmd).resilience,
-                    vigour = ((OwnExtPropSingle)Cmd).vigour,
-                    prop = ((OwnExtPropSingle)Cmd).prop.IntoRpc(),
-                };
+                return ((OwnExtPropSingle)Cmd).IntoRpc();
             }
             if (Cmd is OwnInventoryInfoSingle)
             {
