@@ -193,6 +193,9 @@ class GameDataConverter : JsonConverter
             case "ObjectLeaveSlice":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectLeaveSliceSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "PlayerLeaveWorld":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.PlayerLeaveWorldSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             case "OwnInventoryData":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryInfoSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
@@ -352,6 +355,10 @@ class ApiResponse
             if (Cmd is ObjectLeaveSliceSingle)
             {
                 return ((ObjectLeaveSliceSingle)Cmd).IntoRpc();
+            }
+            if (Cmd is PlayerLeaveWorldSingle)
+            {
+                return ((PlayerLeaveWorldSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
@@ -566,6 +573,18 @@ class ApiResponse
             };
         }
     }
+    public sealed class PlayerLeaveWorldSingle : GameCmd
+    {
+        public long player_id { get; set; }
+
+        public PlayerLeaveWorld IntoRpc()
+        {
+            return new PlayerLeaveWorld()
+            {
+                player_id = player_id
+            };
+        }
+    }
     public sealed class OwnInventoryInfoSingle : GameCmd
     {
         public int by_package { get; set; } 
@@ -746,7 +765,7 @@ class Api
 
     public PwRpc ParseEvent(string msg)
     {
-        Console.WriteLine(msg);
+        // Console.WriteLine(msg);
         try
         {
             var resp = JsonConvert.DeserializeObject<ApiResponse.Root>(msg);

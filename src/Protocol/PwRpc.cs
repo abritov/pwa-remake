@@ -84,6 +84,10 @@ public sealed class ObjectLeaveSlice : GameData
 {
     public long object_id { get; set; }
 }
+public sealed class PlayerLeaveWorld : GameData
+{
+    public long player_id { get; set; }
+}
 
 public class BaseProp
 {
