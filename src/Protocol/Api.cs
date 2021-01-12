@@ -190,6 +190,9 @@ class GameDataConverter : JsonConverter
             case "SelfInfo00":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
+            case "ObjectLeaveSlice":
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectLeaveSliceSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                break;
             case "OwnInventoryData":
                 gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryInfoSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
@@ -345,6 +348,10 @@ class ApiResponse
             if (Cmd is UnknownGameCmdSingle)
             {
                 return ((UnknownGameCmdSingle)Cmd).IntoRpc();
+            }
+            if (Cmd is ObjectLeaveSliceSingle)
+            {
+                return ((ObjectLeaveSliceSingle)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
@@ -546,6 +553,18 @@ class ApiResponse
         public int sp { get; set; }
         public int ap { get; set; }
         public int max_ap { get; set; }
+    }
+    public sealed class ObjectLeaveSliceSingle : GameCmd
+    {
+        public long object_id { get; set; }
+
+        public ObjectLeaveSlice IntoRpc()
+        {
+            return new ObjectLeaveSlice()
+            {
+                object_id = object_id
+            };
+        }
     }
     public sealed class OwnInventoryInfoSingle : GameCmd
     {

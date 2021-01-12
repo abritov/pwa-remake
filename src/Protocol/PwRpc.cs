@@ -66,7 +66,7 @@ public sealed class ObjectStopMove : GameData
     public int dir { get; set; }
     public int move_mode { get; set; }
 }
-public sealed class SelfInfo00: GameData
+public sealed class SelfInfo00 : GameData
 {
     public int level { get; set; }
     public int state { get; set; }
@@ -80,7 +80,10 @@ public sealed class SelfInfo00: GameData
     public int ap { get; set; }
     public int max_ap { get; set; }
 }
-
+public sealed class ObjectLeaveSlice : GameData
+{
+    public long object_id { get; set; }
+}
 
 public class BaseProp
 {
