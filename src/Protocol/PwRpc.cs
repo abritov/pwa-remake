@@ -176,7 +176,7 @@ public class TrashboxPwdState : GameData
 {
     public bool has_passwd { get; set; }
 }
-public class HostReputation
+public class HostReputation : GameData
 {
     public int reputation { get; set; } 
 }
