@@ -1,6 +1,12 @@
 using System;
 using System.Threading.Tasks;
+using PWARemake.Utils;
 
-public interface IProtocol {
-    Task<IObservable<PwRpc>> EnterWorld(string serverAddr, Account account);
+namespace PWARemake.Protocol 
+{
+        
+    public interface IProtocol {
+        Task<IObservable<PwRpc>> EnterWorld(string serverAddr, Account account);
+    }
+
 }
