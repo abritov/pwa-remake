@@ -75,13 +75,13 @@ class SingleConverter : JsonConverter
         switch (jo.First.Path)
         {
             case "Unknown":
-                return JsonConvert.DeserializeObject<ApiResponse.UnknownSingle>(jo.First.First.ToString());
+                return JsonConvert.DeserializeObject<ApiResponse.UnknownResp>(jo.First.First.ToString());
             case "PrivateChat":
-                return JsonConvert.DeserializeObject<ApiResponse.PrivateChatSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
+                return JsonConvert.DeserializeObject<ApiResponse.PrivateChatResp>(jo.First.First.ToString(), SpecifiedSubclassConversion);
             case "ChatMessage":
-                return JsonConvert.DeserializeObject<ApiResponse.ChatMessageSingle>(jo.First.First.ToString(), SpecifiedSubclassConversion);
+                return JsonConvert.DeserializeObject<ApiResponse.ChatMessageResp>(jo.First.First.ToString(), SpecifiedSubclassConversion);
             case "GameData":
-                return JsonConvert.DeserializeObject<ApiResponse.GameDataSingle>(jo.ToString());
+                return JsonConvert.DeserializeObject<ApiResponse.GameDataResp>(jo.ToString());
             default:
                 throw new Exception($"unknown Single {jo.First.Path}");
         }
@@ -103,7 +103,7 @@ class UnknownSingleConverter : JsonConverter
 {
     public override bool CanConvert(Type objectType)
     {
-        return (objectType == typeof(ApiResponse.UnknownSingle));
+        return (objectType == typeof(ApiResponse.UnknownResp));
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -111,7 +111,7 @@ class UnknownSingleConverter : JsonConverter
         var jo = JArray.Load(reader);
         var id = jo.First.Value<int>();
         var octetStream = jo.Last.Value<string>();
-        return new ApiResponse.UnknownSingle(id, octetStream);
+        return new ApiResponse.UnknownResp(id, octetStream);
     }
 
     public override bool CanWrite
@@ -168,7 +168,7 @@ class GameDataConverter : JsonConverter
     static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new GameDataClassContractResolver() };
     public override bool CanConvert(Type objectType)
     {
-        return (objectType == typeof(ApiResponse.GameDataSingle));
+        return (objectType == typeof(ApiResponse.GameDataResp));
     }
 
     public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
@@ -179,48 +179,48 @@ class GameDataConverter : JsonConverter
         switch (cmd)
         {
             case "ObjectMove":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMoveSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectMoveResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "ObjectStopMove":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMoveSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectStopMoveResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "OwnExtProp":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtPropSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnExtPropResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "SelfInfo00":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Single>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SelfInfo00Resp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "ObjectLeaveSlice":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectLeaveSliceSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.ObjectLeaveSliceResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "PlayerLeaveWorld":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.PlayerLeaveWorldSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.PlayerLeaveWorldResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "OwnInventoryData":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryInfoSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryInfoResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "OwnInventoryDetailData":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryDetailDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.OwnInventoryDetailDataResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "SkillData":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SkillDataSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.SkillDataResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "TrashboxPwdState":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.TrashboxPwdStateSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.TrashboxPwdStateResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "HostReputation":
-                gameCmd = JsonConvert.DeserializeObject<ApiResponse.HostReputationSingle>(jo.First.ToString(), SpecifiedSubclassConversion);
+                gameCmd = JsonConvert.DeserializeObject<ApiResponse.HostReputationResp>(jo.First.ToString(), SpecifiedSubclassConversion);
                 break;
             case "Unknown":
                 var id = jo.First.First.Value<int>();
                 var octetStream = jo.First.Last.Value<string>();
-                gameCmd = new ApiResponse.UnknownGameCmdSingle(id, octetStream);
+                gameCmd = new ApiResponse.UnknownGameCmdResp(id, octetStream);
                 break;
             default:
                 Console.WriteLine($"unknown GameCmd {cmd}");
                 throw new Exception($"unknown GameCmd {cmd}");
         }
-        return new ApiResponse.GameDataSingle { Cmd = gameCmd };
+        return new ApiResponse.GameDataResp { Cmd = gameCmd };
     }
 
     public override bool CanWrite
@@ -259,12 +259,12 @@ class ApiResponse
 
 
     [JsonConverter(typeof(UnknownSingleConverter))]
-    public sealed class UnknownSingle : Single
+    public sealed class UnknownResp : Single
     {
         public long Id { get; internal set; }
         public string OctetStream { get; internal set; }
 
-        public UnknownSingle(long id, string octetStream)
+        public UnknownResp(long id, string octetStream)
         {
             Id = id;
             OctetStream = octetStream;
@@ -280,94 +280,94 @@ class ApiResponse
     public abstract class GameCmd { }
 
     [JsonConverter(typeof(GameDataConverter))]
-    public sealed class GameDataSingle : Single {
+    public sealed class GameDataResp : Single {
         public GameCmd Cmd { get; set; }
 
         public override object IntoRpc()
         {
-            if (Cmd is ObjectMoveSingle) 
+            if (Cmd is ObjectMoveResp) 
             {
                 return new ObjectMove() 
                 {
-                    id = ((ObjectMoveSingle)Cmd).id,
-                    dest = ((ObjectMoveSingle)Cmd).dest,
-                    use_time = ((ObjectMoveSingle)Cmd).use_time,
-                    speed = ((ObjectMoveSingle)Cmd).speed,
-                    move_mode = ((ObjectMoveSingle)Cmd).move_mode,
+                    id = ((ObjectMoveResp)Cmd).id,
+                    dest = ((ObjectMoveResp)Cmd).dest,
+                    use_time = ((ObjectMoveResp)Cmd).use_time,
+                    speed = ((ObjectMoveResp)Cmd).speed,
+                    move_mode = ((ObjectMoveResp)Cmd).move_mode,
                 };
             }
-            if (Cmd is ObjectStopMoveSingle) 
+            if (Cmd is ObjectStopMoveResp) 
             {
                 return new ObjectStopMove() 
                 {
-                    id = ((ObjectStopMoveSingle)Cmd).id,
-                    dest = ((ObjectStopMoveSingle)Cmd).dest,
-                    speed = ((ObjectStopMoveSingle)Cmd).speed,
-                    dir = ((ObjectStopMoveSingle)Cmd).dir,
-                    move_mode = ((ObjectStopMoveSingle)Cmd).move_mode,
+                    id = ((ObjectStopMoveResp)Cmd).id,
+                    dest = ((ObjectStopMoveResp)Cmd).dest,
+                    speed = ((ObjectStopMoveResp)Cmd).speed,
+                    dir = ((ObjectStopMoveResp)Cmd).dir,
+                    move_mode = ((ObjectStopMoveResp)Cmd).move_mode,
                 };
             }
-            if (Cmd is SelfInfo00Single)
+            if (Cmd is SelfInfo00Resp)
             {
                 return new SelfInfo00() 
                 {
-                    level = ((SelfInfo00Single)Cmd).level,
-                    state = ((SelfInfo00Single)Cmd).state,
-                    level2 = ((SelfInfo00Single)Cmd).level2,
-                    hp = ((SelfInfo00Single)Cmd).hp,
-                    max_hp = ((SelfInfo00Single)Cmd).max_hp,
-                    mp = ((SelfInfo00Single)Cmd).mp,
-                    max_mp = ((SelfInfo00Single)Cmd).max_mp,
-                    exp = ((SelfInfo00Single)Cmd).exp,
-                    sp = ((SelfInfo00Single)Cmd).sp,
-                    ap = ((SelfInfo00Single)Cmd).ap,
-                    max_ap = ((SelfInfo00Single)Cmd).max_ap,
+                    level = ((SelfInfo00Resp)Cmd).level,
+                    state = ((SelfInfo00Resp)Cmd).state,
+                    level2 = ((SelfInfo00Resp)Cmd).level2,
+                    hp = ((SelfInfo00Resp)Cmd).hp,
+                    max_hp = ((SelfInfo00Resp)Cmd).max_hp,
+                    mp = ((SelfInfo00Resp)Cmd).mp,
+                    max_mp = ((SelfInfo00Resp)Cmd).max_mp,
+                    exp = ((SelfInfo00Resp)Cmd).exp,
+                    sp = ((SelfInfo00Resp)Cmd).sp,
+                    ap = ((SelfInfo00Resp)Cmd).ap,
+                    max_ap = ((SelfInfo00Resp)Cmd).max_ap,
                 };
             }
-            if (Cmd is OwnExtPropSingle)
+            if (Cmd is OwnExtPropResp)
             {
-                return ((OwnExtPropSingle)Cmd).IntoRpc();
+                return ((OwnExtPropResp)Cmd).IntoRpc();
             }
-            if (Cmd is OwnInventoryInfoSingle)
+            if (Cmd is OwnInventoryInfoResp)
             {
-                return ((OwnInventoryInfoSingle)Cmd).IntoRpc();
+                return ((OwnInventoryInfoResp)Cmd).IntoRpc();
             }
-            if (Cmd is OwnInventoryDetailDataSingle)
+            if (Cmd is OwnInventoryDetailDataResp)
             {
-                return ((OwnInventoryDetailDataSingle)Cmd).IntoRpc();
+                return ((OwnInventoryDetailDataResp)Cmd).IntoRpc();
             }
-            if (Cmd is SkillDataSingle)
+            if (Cmd is SkillDataResp)
             {
-                return ((SkillDataSingle)Cmd).IntoRpc();
+                return ((SkillDataResp)Cmd).IntoRpc();
             }
-            if (Cmd is TrashboxPwdStateSingle)
+            if (Cmd is TrashboxPwdStateResp)
             {
-                return ((TrashboxPwdStateSingle)Cmd).IntoRpc();
+                return ((TrashboxPwdStateResp)Cmd).IntoRpc();
             }
-            if (Cmd is HostReputationSingle)
+            if (Cmd is HostReputationResp)
             {
-                return ((HostReputationSingle)Cmd).IntoRpc();
+                return ((HostReputationResp)Cmd).IntoRpc();
             }
-            if (Cmd is UnknownGameCmdSingle)
+            if (Cmd is UnknownGameCmdResp)
             {
-                return ((UnknownGameCmdSingle)Cmd).IntoRpc();
+                return ((UnknownGameCmdResp)Cmd).IntoRpc();
             }
-            if (Cmd is ObjectLeaveSliceSingle)
+            if (Cmd is ObjectLeaveSliceResp)
             {
-                return ((ObjectLeaveSliceSingle)Cmd).IntoRpc();
+                return ((ObjectLeaveSliceResp)Cmd).IntoRpc();
             }
-            if (Cmd is PlayerLeaveWorldSingle)
+            if (Cmd is PlayerLeaveWorldResp)
             {
-                return ((PlayerLeaveWorldSingle)Cmd).IntoRpc();
+                return ((PlayerLeaveWorldResp)Cmd).IntoRpc();
             }
             throw new Exception($"unknown GameData {Cmd.ToString()}");
         }
     }
-    public sealed class UnknownGameCmdSingle : GameCmd
+    public sealed class UnknownGameCmdResp : GameCmd
     {
         public int Id { get; set; }
         public string OctetStream { get; set; }
-        public UnknownGameCmdSingle(int id, string octetStream)
+        public UnknownGameCmdResp(int id, string octetStream)
         {
             Id = id;
             OctetStream = octetStream;
@@ -377,7 +377,7 @@ class ApiResponse
             return new UnknownGameCmd(Id, OctetStream);
         }
     }
-    public sealed class ObjectMoveSingle : GameCmd
+    public sealed class ObjectMoveResp : GameCmd
     {
         public long id { get; set; }
         public Point3D dest { get; set; }
@@ -385,7 +385,7 @@ class ApiResponse
         public short speed { get; set; }
         public short move_mode { get; set; }
     }
-    public sealed class ObjectStopMoveSingle : GameCmd
+    public sealed class ObjectStopMoveResp : GameCmd
     {
         public long id { get; set; }
         public Point3D dest { get; set; }
@@ -393,7 +393,7 @@ class ApiResponse
         public int dir { get; set; }
         public int move_mode { get; set; }
     }
-    public class BasePropSingle
+    public class BasePropResp
     {
         public int vitality { get; set; } 
         public int energy { get; set; } 
@@ -419,7 +419,7 @@ class ApiResponse
         }
     }
 
-    public class MovePropSingle
+    public class MovePropResp
     {
         public double walk_speed { get; set; } 
         public double run_speed { get; set; } 
@@ -438,7 +438,7 @@ class ApiResponse
         }
     }
 
-    public class AddonDamageSingle
+    public class AddonDamageResp
     {
         public int damage_low { get; set; } 
         public int damage_high { get; set; } 
@@ -453,14 +453,14 @@ class ApiResponse
         }
     }
 
-    public class AtkPropSingle
+    public class AtkPropResp
     {
         public int attack { get; set; } 
         public int damage_low { get; set; } 
         public int damage_high { get; set; } 
         public int attack_speed { get; set; } 
         public double attack_range { get; set; } 
-        public List<AddonDamageSingle> addon_damage { get; set; } 
+        public List<AddonDamageResp> addon_damage { get; set; } 
         public int damage_magic_low { get; set; } 
         public int damage_magic_high { get; set; } 
 
@@ -480,7 +480,7 @@ class ApiResponse
         }
     }
 
-    public class DefPropSingle
+    public class DefPropResp
     {
         public List<int> resistance { get; set; } 
         public int defense { get; set; } 
@@ -497,12 +497,12 @@ class ApiResponse
         }
     }
 
-    public class RoleExtPropSingle
+    public class RoleExtPropResp
     {
-        public BasePropSingle base_prop { get; set; } 
-        public MovePropSingle move_prop { get; set; } 
-        public AtkPropSingle atk_prop { get; set; } 
-        public DefPropSingle def_prop { get; set; } 
+        public BasePropResp base_prop { get; set; } 
+        public MovePropResp move_prop { get; set; } 
+        public AtkPropResp atk_prop { get; set; } 
+        public DefPropResp def_prop { get; set; } 
         public int max_ap { get; set; } 
 
         public RoleExtProp IntoRpc() {
@@ -516,7 +516,7 @@ class ApiResponse
             };
         }
     }
-    public sealed class OwnExtPropSingle : GameCmd {
+    public sealed class OwnExtPropResp : GameCmd {
         public int status_point { get; set; } 
         public int? attack_degree { get; set; } 
         public int? defend_degree { get; set; } 
@@ -527,7 +527,7 @@ class ApiResponse
         public int? penetration { get; set; } 
         public int? resilience { get; set; } 
         public int? vigour { get; set; } 
-        public RoleExtPropSingle prop { get; set; } 
+        public RoleExtPropResp prop { get; set; } 
 
         public OwnExtProp IntoRpc()
         {
@@ -547,7 +547,7 @@ class ApiResponse
             };
         }
     }
-    public sealed class SelfInfo00Single : GameCmd
+    public sealed class SelfInfo00Resp : GameCmd
     {
         public int level { get; set; }
         public int state { get; set; }
@@ -561,7 +561,7 @@ class ApiResponse
         public int ap { get; set; }
         public int max_ap { get; set; }
     }
-    public sealed class ObjectLeaveSliceSingle : GameCmd
+    public sealed class ObjectLeaveSliceResp : GameCmd
     {
         public long object_id { get; set; }
 
@@ -573,7 +573,7 @@ class ApiResponse
             };
         }
     }
-    public sealed class PlayerLeaveWorldSingle : GameCmd
+    public sealed class PlayerLeaveWorldResp : GameCmd
     {
         public long player_id { get; set; }
 
@@ -585,7 +585,7 @@ class ApiResponse
             };
         }
     }
-    public sealed class OwnInventoryInfoSingle : GameCmd
+    public sealed class OwnInventoryInfoResp : GameCmd
     {
         public int by_package { get; set; } 
         public int inventory_size { get; set; } 
@@ -601,7 +601,7 @@ class ApiResponse
             };
         }
     }
-    public sealed class OwnInventoryDetailDataSingle : GameCmd
+    public sealed class OwnInventoryDetailDataResp : GameCmd
     {
         public int by_package { get; set; } 
         public int inventory_size { get; set; } 
@@ -617,7 +617,7 @@ class ApiResponse
             };
         }
     }
-    public class SkillSingle
+    public class SkillResp
     {
         public int id { get; set; } 
         public int level { get; set; } 
@@ -634,9 +634,9 @@ class ApiResponse
         }
     }
 
-    public class SkillDataSingle : GameCmd
+    public class SkillDataResp : GameCmd
     {
-        public List<SkillSingle> skills { get; set; } 
+        public List<SkillResp> skills { get; set; } 
 
         public SkillData IntoRpc()
         {
@@ -647,7 +647,7 @@ class ApiResponse
         }
     }
 
-    public class TrashboxPwdStateSingle : GameCmd
+    public class TrashboxPwdStateResp : GameCmd
     {
         public byte has_passwd { get; set; }
 
@@ -660,7 +660,7 @@ class ApiResponse
         }
     }
 
-    public class HostReputationSingle : GameCmd
+    public class HostReputationResp : GameCmd
     {
         public int reputation { get; set; } 
 
@@ -674,7 +674,7 @@ class ApiResponse
     }
 
 
-    public sealed class ChatMessageSingle : Single
+    public sealed class ChatMessageResp : Single
     {
         public int channel { get; set; }
         public int emotion { get; set; }
@@ -694,7 +694,7 @@ class ApiResponse
     }
 
 
-    public sealed class PrivateChatSingle : Single
+    public sealed class PrivateChatResp : Single
     {
         public int channel { get; set; }
         public int emotion { get; set; }
@@ -725,10 +725,10 @@ class ApiResponse
 
     public sealed class GameDataCmdResponse 
     {
-        public SelfInfo00Single SelfInfo00 { get; internal set; }
-        public ObjectMoveSingle ObjectMove { get; internal set; }
-        public ObjectStopMoveSingle ObjectStopMove { get; internal set; }
-        public OwnExtPropSingle OwnExtProp { get; internal set; }
+        public SelfInfo00Resp SelfInfo00 { get; internal set; }
+        public ObjectMoveResp ObjectMove { get; internal set; }
+        public ObjectStopMoveResp ObjectStopMove { get; internal set; }
+        public OwnExtPropResp OwnExtProp { get; internal set; }
     }
 
 
@@ -740,9 +740,9 @@ class ApiResponse
 
     public class SingleResponse
     {
-        public UnknownSingle Unknown { get; set; }
-        public PrivateChatSingle PrivateChat { get; set; }
-        public ChatMessageSingle ChatMessage { get; set; }
+        public UnknownResp Unknown { get; set; }
+        public PrivateChatResp PrivateChat { get; set; }
+        public ChatMessageResp ChatMessage { get; set; }
         public GameDataResponse GameData { get; set; }
     }
 
