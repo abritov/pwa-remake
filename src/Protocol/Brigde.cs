@@ -8,11 +8,13 @@ using Websocket.Client;
 namespace PWARemake.Protocol 
 {
     
-    class PwToHttpBridge : IProtocol {
+    class PwToHttpBridge : IProtocol
+    {
         Api api;
         WebsocketClient client;
 
-        public PwToHttpBridge(Api api, Uri wsEndpoint) {
+        public PwToHttpBridge(Api api, Uri wsEndpoint)
+        {
             this.api = api;
             this.client = new WebsocketClient(wsEndpoint) {
                 IsTextMessageConversionEnabled = true,
@@ -25,7 +27,8 @@ namespace PWARemake.Protocol
             //     Console.WriteLine(msg.MessageType);
             // }).Subscribe();
         }
-        public async Task<IObservable<PwRpc>> EnterWorld(string serverAddr, Account account) {
+        public async Task<IObservable<PwRpc>> EnterWorld(string serverAddr, Account account)
+        {
             var cmd = api.EnterWorld(serverAddr, account);
             Console.WriteLine(cmd);
             await client.StartOrFail();
