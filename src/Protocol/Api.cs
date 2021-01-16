@@ -768,6 +768,11 @@ namespace PWARemake.Protocol
             return $"{{\"addr\": \"{serverAddr}\", \"select_role_by_index\": {account.DefaultRoleIndex}, \"account\": {{\"login\": \"{account.Login}\", \"passwd\": \"{account.Password}\"}}}}";
         }
 
+        public string Serialize(RpcCommand cmd)
+        {
+            return JsonConvert.SerializeObject(cmd, Formatting.None);
+        }
+
         public PwRpc ParseEvent(string msg)
         {
             Console.WriteLine(msg);

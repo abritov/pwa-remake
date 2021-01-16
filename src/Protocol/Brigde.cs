@@ -37,6 +37,11 @@ namespace PWARemake.Protocol
             return client.MessageReceived.Select(msg => api.ParseEvent(msg.Text));
         }
 
+        public async Task Send(RpcCommand cmd)
+        {
+            await client.SendInstant(api.Serialize(cmd));
+        }
+
         public void SendSkills() {
 
         }
