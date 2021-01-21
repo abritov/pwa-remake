@@ -32,7 +32,7 @@ namespace PWARemake.Lib.Protocol
         {
             return Serialize(new
             {
-                CmdPlayerMove = this
+                PlayerMove = this
             });
         }
     }
@@ -49,7 +49,7 @@ namespace PWARemake.Lib.Protocol
         {
             return Serialize(new
             {
-                CmdPlayerStopMove = this
+                PlayerStopMove = this
             });
         }
     }
@@ -59,7 +59,7 @@ namespace PWARemake.Lib.Protocol
         {
             return Serialize(new
             {
-                CmdReviveVillage = this
+                ReviveVillage = this
             });
         }
     }
@@ -73,7 +73,7 @@ namespace PWARemake.Lib.Protocol
         {
             return Serialize(new
             {
-                CmdGetAllData = this
+                GetAllData = this
             });
         }
     }
