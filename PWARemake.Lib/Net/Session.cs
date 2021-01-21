@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Event;
-using PWARemake.Protocol;
-using PWARemake.Utils;
+using PWARemake.Lib.Protocol;
+using PWARemake.Lib.Utils;
 
-namespace PWARemake.Net
+namespace PWARemake.Lib.Net
 {
 
     class Session : ReceiveActor {
@@ -51,6 +51,11 @@ namespace PWARemake.Net
                 .Subscribe(target => Console.WriteLine($"{target.dest.X} {target.dest.Y} {target.dest.Z}"));
 
             events.Connect();
+
+            Observable
+                .Interval(TimeSpan.FromSeconds(2))
+                .Do((_) => protocol.Send(new CmdGetAllData()))
+                .Subscribe();
         }
     }
 

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using PWARemake.Game;
+using PWARemake.Lib.Game;
 
-namespace PWARemake.Protocol 
+namespace PWARemake.Lib.Protocol 
 {
     
     public abstract class PwRpc { }

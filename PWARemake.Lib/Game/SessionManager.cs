@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using Akka.Actor;
 using Akka.Event;
-using PWARemake.Net;
-using PWARemake.Protocol;
+using PWARemake.Lib.Net;
+using PWARemake.Lib.Protocol;
 
-namespace PWARemake.Game
+namespace PWARemake.Lib.Game
 {
 
-    abstract class SessionManagerEvents { }
-    sealed class AddSession : SessionManagerEvents
+    public abstract class SessionManagerEvents { }
+    public sealed class AddSession : SessionManagerEvents
     {
         public string Login { get; private set; }
         public string Password { get; private set; }
@@ -23,7 +23,7 @@ namespace PWARemake.Game
     sealed class SendSkills : SessionManagerEvents { }
     sealed class GetRoles : SessionManagerEvents { }
 
-    class SessionManager : ReceiveActor
+    public class SessionManager : ReceiveActor
     {
         private readonly ILoggingAdapter log = Context.GetLogger();
         private readonly List<IActorRef> sessions = new List<IActorRef>();

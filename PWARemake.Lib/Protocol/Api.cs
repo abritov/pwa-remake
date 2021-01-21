@@ -4,10 +4,10 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using PWARemake.Game;
-using PWARemake.Utils;
+using PWARemake.Lib.Game;
+using PWARemake.Lib.Utils;
 
-namespace PWARemake.Protocol 
+namespace PWARemake.Lib.Protocol 
 {
     
     class RootClassContractResolver : DefaultContractResolver

@@ -2,10 +2,10 @@ using System;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using PWARemake.Utils;
+using PWARemake.Lib.Utils;
 using Websocket.Client;
 
-namespace PWARemake.Protocol 
+namespace PWARemake.Lib.Protocol 
 {
     
     class PwToHttpBridge : IProtocol

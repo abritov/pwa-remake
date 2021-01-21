@@ -1,6 +1,6 @@
 using System;
 
-namespace PWARemake.Game
+namespace PWARemake.Lib.Game
 {
     public interface IGameContextUpdatesProvider {
         IObservable<int> GetHpUpdates();

@@ -1,6 +1,6 @@
-using PWARemake.Protocol;
+using PWARemake.Lib.Protocol;
 
-namespace PWARemake.Utils
+namespace PWARemake.Lib.Utils
 {
     class Offsets {
         public int BaseAddress { get; private set; }

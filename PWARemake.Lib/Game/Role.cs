@@ -1,5 +1,5 @@
 
-namespace PWARemake.Game
+namespace PWARemake.Lib.Game
 {
     public class Role {
         public Point3D Position { get; private set; }

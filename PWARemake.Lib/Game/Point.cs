@@ -1,4 +1,4 @@
-namespace PWARemake.Game
+namespace PWARemake.Lib.Game
 {
     public class Point3D {
         public float X { get; internal set; }

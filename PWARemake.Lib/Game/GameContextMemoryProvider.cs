@@ -1,8 +1,8 @@
 using System;
 using System.Reactive.Linq;
-using PWARemake.Utils;
+using PWARemake.Lib.Utils;
 
-namespace PWARemake.Game
+namespace PWARemake.Lib.Game
 {
     class GameContextMemoryProvider: IGameContextUpdatesProvider {
         Offsets offsets;

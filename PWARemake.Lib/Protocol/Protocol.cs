@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using PWARemake.Utils;
+using PWARemake.Lib.Utils;
 
-namespace PWARemake.Protocol 
+namespace PWARemake.Lib.Protocol 
 {
         
     public interface IProtocol {

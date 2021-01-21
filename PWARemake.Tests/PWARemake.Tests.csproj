@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\pwa-remake.csproj" />
+    <ProjectReference Include="..\PWARemake.Lib\PWARemake.Lib.csproj" />
   </ItemGroup>
 
 </Project>
