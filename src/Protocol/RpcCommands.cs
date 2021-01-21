@@ -47,14 +47,20 @@ namespace PWARemake.Protocol
 
         public override object IntoRpc()
         {
-            throw new System.NotImplementedException();
+            return Serialize(new
+            {
+                CmdPlayerStopMove = this
+            });
         }
     }
     public sealed class CmdReviveVillage : GameCmd
     {
         public override object IntoRpc()
         {
-            throw new System.NotImplementedException();
+            return Serialize(new
+            {
+                CmdReviveVillage = this
+            });
         }
     }
     public sealed class CmdGetAllData : GameCmd
@@ -65,7 +71,10 @@ namespace PWARemake.Protocol
 
         public override object IntoRpc()
         {
-            throw new System.NotImplementedException();
+            return Serialize(new
+            {
+                CmdGetAllData = this
+            });
         }
     }
 
