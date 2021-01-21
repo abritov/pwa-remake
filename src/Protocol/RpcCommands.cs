@@ -1,19 +1,21 @@
 using PWARemake.Game;
 
-namespace PWARemake.Protocol 
+namespace PWARemake.Protocol
 {
-    public abstract class RpcCommand { }
-    public sealed class GameCommand : RpcCommand
+    public abstract class RpcCommand
     {
-        public GameCmd cmd { get; internal set; }
+        public abstract object IntoRpc();
     }
-    public abstract class GameCmd 
+    public abstract class GameCmd : RpcCommand
     {
-        public GameCommand IntoRpc()
+        public object Serialize(object cmd)
         {
-            return new GameCommand()
+            return new
             {
-                cmd = this
+                GameCmd = new
+                {
+                    cmd = cmd
+                }
             };
         }
     }
@@ -25,6 +27,14 @@ namespace PWARemake.Protocol
         public short speed { get; internal set; }
         public byte move_mode { get; internal set; }
         public short stamp { get; internal set; }
+
+        public override object IntoRpc()
+        {
+            return Serialize(new
+            {
+                CmdPlayerMove = this
+            });
+        }
     }
     public sealed class CmdPlayerStopMove : GameCmd
     {
@@ -34,13 +44,29 @@ namespace PWARemake.Protocol
         public byte move_mode { get; internal set; }
         public short stamp { get; internal set; }
         public short use_time { get; internal set; }
+
+        public override object IntoRpc()
+        {
+            throw new System.NotImplementedException();
+        }
     }
-    public sealed class CmdReviveVillage : GameCmd { }
+    public sealed class CmdReviveVillage : GameCmd
+    {
+        public override object IntoRpc()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
     public sealed class CmdGetAllData : GameCmd
     {
         public bool include_pack_info { get; internal set; }
         public bool include_equip_info { get; internal set; }
         public bool include_task_info { get; internal set; }
+
+        public override object IntoRpc()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 
 }

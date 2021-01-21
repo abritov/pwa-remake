@@ -760,7 +760,16 @@ namespace PWARemake.Protocol
         public abstract class Root { }
     }
 
-    class Api
+    class ApiCommands
+    {
+        public abstract class RpcCommand { }
+        public sealed class GameDataCommand : RpcCommand
+        {
+            public object GameData { get; set; }
+        }
+    }
+
+    public class Api
     {
 
         public string EnterWorld(string serverAddr, Account account)
@@ -770,7 +779,16 @@ namespace PWARemake.Protocol
 
         public string Serialize(RpcCommand cmd)
         {
-            return JsonConvert.SerializeObject(cmd, Formatting.None);
+            // ApiCommands.RpcCommand target;
+            // if (cmd is GameCommand)
+            // {
+            //     target = new ApiCommands.GameDataCommand()
+            //     {
+            //         GameData = cmd
+            //     };
+            // }
+            return JsonConvert.SerializeObject(cmd.IntoRpc(), Formatting.None);
+            throw new Exception("unimplemented");
         }
 
         public PwRpc ParseEvent(string msg)
