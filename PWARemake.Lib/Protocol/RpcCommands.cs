@@ -8,7 +8,7 @@ namespace PWARemake.Lib.Protocol
     }
     public abstract class GameCmd : RpcCommand
     {
-        public object Serialize(object cmd)
+        protected object Serialize(object cmd)
         {
             return new
             {
