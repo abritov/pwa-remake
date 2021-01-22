@@ -762,10 +762,80 @@ namespace PWARemake.Lib.Protocol
 
     class ApiCommands
     {
-        public abstract class RpcCommand { }
-        public sealed class GameDataCommand : RpcCommand
+        internal abstract class RpcCommand
         {
-            public object GameData { get; set; }
+            public abstract object IntoRpc();
+        }
+        internal abstract class GameCmd : RpcCommand
+        {
+            protected object Serialize(object cmd)
+            {
+                return new
+                {
+                    GameCmd = new
+                    {
+                        cmd = cmd
+                    }
+                };
+            }
+        }
+        internal sealed class CmdPlayerMove : GameCmd
+        {
+            public Point3D current_pos { get; internal set; }
+            public Point3D next_pos { get; internal set; }
+            public short use_time { get; internal set; }
+            public short speed { get; internal set; }
+            public byte move_mode { get; internal set; }
+            public short stamp { get; internal set; }
+
+            public override object IntoRpc()
+            {
+                return Serialize(new
+                {
+                    PlayerMove = this
+                });
+            }
+        }
+        internal sealed class CmdPlayerStopMove : GameCmd
+        {
+            public Point3D current_pos { get; internal set; }
+            public short speed { get; internal set; }
+            public byte dir { get; internal set; }
+            public byte move_mode { get; internal set; }
+            public short stamp { get; internal set; }
+            public short use_time { get; internal set; }
+
+            public override object IntoRpc()
+            {
+                return Serialize(new
+                {
+                    PlayerStopMove = this
+                });
+            }
+        }
+        internal sealed class CmdReviveVillage : GameCmd
+        {
+            public override object IntoRpc()
+            {
+                return Serialize(new
+                {
+                    ReviveVillage = this
+                });
+            }
+        }
+        internal sealed class CmdGetAllData : GameCmd
+        {
+            public bool include_pack_info { get; internal set; }
+            public bool include_equip_info { get; internal set; }
+            public bool include_task_info { get; internal set; }
+
+            public override object IntoRpc()
+            {
+                return Serialize(new
+                {
+                    GetAllData = this
+                });
+            }
         }
     }
 
@@ -779,16 +849,48 @@ namespace PWARemake.Lib.Protocol
 
         public string Serialize(RpcCommand cmd)
         {
-            // ApiCommands.RpcCommand target;
-            // if (cmd is GameCommand)
-            // {
-            //     target = new ApiCommands.GameDataCommand()
-            //     {
-            //         GameData = cmd
-            //     };
-            // }
-            return JsonConvert.SerializeObject(cmd.IntoRpc(), Formatting.None);
-            throw new Exception("unimplemented");
+            ApiCommands.RpcCommand target = null;
+            if (cmd is GameCmd)
+            {
+                if (cmd is CmdPlayerMove move)
+                {
+                    target = new ApiCommands.CmdPlayerMove()
+                    {
+                        current_pos = move.current_pos,
+                        next_pos = move.next_pos,
+                        use_time = move.use_time,
+                        speed = move.speed,
+                        move_mode = (byte)move.move_mode,
+                        stamp = move.stamp
+                    };
+                }
+                if (cmd is CmdPlayerStopMove stopMove)
+                {
+                    target = new ApiCommands.CmdPlayerStopMove()
+                    {
+                        current_pos = stopMove.current_pos,
+                        speed = stopMove.speed,
+                        dir = stopMove.dir,
+                        move_mode = (byte)stopMove.move_mode,
+                        stamp = stopMove.stamp,
+                        use_time = stopMove.use_time
+                    };
+                }
+                if (cmd is CmdReviveVillage)
+                {
+                    target = new ApiCommands.CmdReviveVillage();
+                }
+                if (cmd is CmdGetAllData getAllData)
+                {
+                    target = new ApiCommands.CmdGetAllData()
+                    {
+                        include_equip_info = getAllData.include_equip_info,
+                        include_pack_info = getAllData.include_pack_info,
+                        include_task_info = getAllData.include_task_info
+                    };
+                }
+            }
+            return JsonConvert.SerializeObject(target.IntoRpc(), Formatting.None);
         }
 
         public PwRpc ParseEvent(string msg)
